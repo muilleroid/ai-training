@@ -1,0 +1,12 @@
+{
+  "name": "fakestore-api-tests",
+  "version": "1.0.0",
+  "description": "E2E tests for FakeStore API using Bun test runner",
+  "type": "module",
+  "scripts": {
+    "test": "bun test"
+  },
+  "engines": {
+    "bun": "1.2.9"
+  }
+}

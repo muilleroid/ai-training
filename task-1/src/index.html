@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Expense Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Monthly Expense Tracker</h1>
+
+        <div class="expense-form">
+            <div class="form-group">
+                <label for="category">Category:</label>
+                <input type="text" id="category" placeholder="Enter expense category" required>
+            </div>
+            <div class="form-group">
+                <label for="amount">Amount:</label>
+                <input type="number" id="amount" placeholder="Enter amount" step="0.01" min="0.01" required>
+            </div>
+            <button id="add-btn">Add Expense</button>
+        </div>
+
+        <div class="expenses-container">
+            <h2>Your Expenses</h2>
+            <div class="table-container">
+                <table id="expenses-table">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody id="expenses-body">
+                        <!-- Expenses will be added here dynamically -->
+                    </tbody>
+                </table>
+                <div id="empty-table-message" class="empty-table-message">
+                    No expenses added yet. Add your first expense above.
+                </div>
+            </div>
+            <button id="calculate-btn" disabled>Calculate</button>
+        </div>
+
+        <div class="results" id="results-container" style="display: none;">
+            <h2>Results</h2>
+            <div class="result-item">
+                <h3>Total Expenses:</h3>
+                <p id="total-amount">$0.00</p>
+            </div>
+            <div class="result-item">
+                <h3>Average Daily Expense:</h3>
+                <p id="average-expense">$0.00</p>
+            </div>
+            <div class="result-item">
+                <h3>Top 3 Expenses:</h3>
+                <ul id="top-expenses">
+                    <!-- Top expenses will be listed here -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

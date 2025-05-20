@@ -15,6 +15,13 @@
       "when": 1747747457914,
       "tag": "0001_fast_nighthawk",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1747758989593,
+      "tag": "0002_slippery_masque",
+      "breakpoints": true
     }
   ]
 }

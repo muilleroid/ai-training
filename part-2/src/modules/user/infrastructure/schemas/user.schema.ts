@@ -13,10 +13,10 @@ export const userSchema = pgTable('users', {
   website: text('website').notNull(),
   addressId: varchar('address_id')
     .notNull()
-    .references(() => addressSchema.id),
+    .references(() => addressSchema.id, { onDelete: 'cascade' }),
   companyId: varchar('company_id')
     .notNull()
-    .references(() => companySchema.id),
+    .references(() => companySchema.id, { onDelete: 'cascade' }),
 });
 
 export type UserSchema = typeof userSchema.$inferSelect;

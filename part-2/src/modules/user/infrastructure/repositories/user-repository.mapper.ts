@@ -52,12 +52,9 @@ type ToUserParams = {
   users?: UserSchema | null;
 };
 
-export const toUser = ({
-  addresses: address,
-  companies: company,
-  geos: geo,
-  users: user,
-}: ToUserParams): User | null => {
+export const toUser = (params: ToUserParams | null): User | null => {
+  const { addresses: address, companies: company, geos: geo, users: user } = params || {};
+
   if (!user) {
     return null;
   }

@@ -11,7 +11,7 @@ export const addressSchema = pgTable('addresses', {
   zipcode: text('zipcode').notNull(),
   geoId: varchar('geo_id')
     .notNull()
-    .references(() => geoSchema.id),
+    .references(() => geoSchema.id, { onDelete: 'cascade' }),
 });
 
 export type AddressSchema = typeof addressSchema.$inferSelect;

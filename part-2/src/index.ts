@@ -1,6 +1,8 @@
 import { Elysia } from 'elysia';
 
+import { swagger } from 'core/swagger';
 import { setup } from 'core/setup';
-import { userController } from 'modules/user/presentation';
 
-const app = new Elysia({ prefix: '/api' }).use(setup).use(userController).listen(3000);
+import { routes } from './routes';
+
+new Elysia().use(setup).use(swagger).use(routes).listen(3000);

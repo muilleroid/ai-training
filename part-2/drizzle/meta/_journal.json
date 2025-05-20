@@ -8,6 +8,13 @@
       "when": 1747745754301,
       "tag": "0000_slim_miracleman",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1747747457914,
+      "tag": "0001_fast_nighthawk",
+      "breakpoints": true
     }
   ]
 }

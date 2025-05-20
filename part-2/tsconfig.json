@@ -8,6 +8,6 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "ES2021",
-    "types": ["bun-types"]
+    "typeRoots": ["@types-extensions", "node_modules/@types", "node_module/bun-types"]
   }
 }

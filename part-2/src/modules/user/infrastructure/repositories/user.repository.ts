@@ -6,7 +6,7 @@ import { setup } from 'core/setup';
 
 import type { UserRepository } from 'modules/user/domain/types';
 
-import { addressSchema, companySchema, geoSchema, userSchema } from '../schemas';
+import { addressSchema, companySchema, userSchema } from '../schemas';
 
 import { toUser, toUserList } from './user-repository.mapper';
 
@@ -19,19 +19,12 @@ export const userRepository = new Elysia({ name: 'user/repository' })
         const { geo } = address;
 
         const userId = await connection.transaction(async (tx) => {
-          const [createdGeo] = await tx
-            .insert(geoSchema)
-            .values({
-              lat: geo.lat,
-              lng: geo.lng,
-            })
-            .returning({ id: geoSchema.id });
-
           const [createdAddress] = await tx
             .insert(addressSchema)
             .values({
               city: address.city,
-              geoId: createdGeo.id,
+              lat: geo.lat,
+              lng: geo.lng,
               street: address.street,
               suite: address.suite,
               zipcode: address.zipcode,
@@ -77,7 +70,6 @@ export const userRepository = new Elysia({ name: 'user/repository' })
           .select()
           .from(userSchema)
           .leftJoin(addressSchema, eq(userSchema.addressId, addressSchema.id))
-          .leftJoin(geoSchema, eq(addressSchema.geoId, geoSchema.id))
           .leftJoin(companySchema, eq(userSchema.companyId, companySchema.id));
 
         return toUserList(users);
@@ -88,7 +80,6 @@ export const userRepository = new Elysia({ name: 'user/repository' })
           .from(userSchema)
           .where(eq(userSchema.id, userId))
           .leftJoin(addressSchema, eq(userSchema.addressId, addressSchema.id))
-          .leftJoin(geoSchema, eq(addressSchema.geoId, geoSchema.id))
           .leftJoin(companySchema, eq(userSchema.companyId, companySchema.id))
           .limit(1);
 
@@ -116,33 +107,14 @@ export const userRepository = new Elysia({ name: 'user/repository' })
               street: address.street,
               suite: address.suite,
               zipcode: address.zipcode,
+              ...(address.geo && {
+                lat: address.geo.lat,
+                lng: address.geo.lng,
+              }),
             });
 
             if (Object.keys(addressUpdates).length > 0) {
-              await tx
-                .update(addressSchema)
-                .set(address)
-                .where(eq(addressSchema.id, addressId))
-                .returning({ geoId: addressSchema.geoId });
-            }
-
-            const { geo } = address;
-
-            if (geo) {
-              const geoUpdates = omitEmpty<object>({
-                lat: geo.lat,
-                lng: geo.lng,
-              });
-
-              if (Object.keys(geoUpdates).length > 0) {
-                const [foundAddress] = await tx
-                  .select({ geoId: addressSchema.geoId })
-                  .from(addressSchema)
-                  .where(eq(addressSchema.id, addressId))
-                  .limit(1);
-
-                await tx.update(geoSchema).set(geoUpdates).where(eq(geoSchema.id, foundAddress.geoId));
-              }
+              await tx.update(addressSchema).set(addressUpdates).where(eq(addressSchema.id, addressId));
             }
           }
 

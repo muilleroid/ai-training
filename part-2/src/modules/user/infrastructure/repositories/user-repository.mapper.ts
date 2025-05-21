@@ -1,20 +1,22 @@
-import type { Address, Company, Geo, User } from 'modules/user/domain/types';
+import type { Address, Company, User } from 'modules/user/domain/types';
 
-import type { AddressSchema, CompanySchema, GeoSchema, UserSchema } from '../schemas';
+import type { AddressSchema, CompanySchema, UserSchema } from '../schemas';
 
 type ToAddressParams = {
   addresses?: AddressSchema | null;
-  geos?: GeoSchema | null;
 };
 
-export const toAddress = ({ addresses: address, geos: geo }: ToAddressParams): Address | null => {
+export const toAddress = ({ addresses: address }: ToAddressParams): Address | null => {
   if (!address) {
     return null;
   }
 
   return {
     city: address.city,
-    geo: toGeo(geo),
+    geo: {
+      lat: address.lat,
+      lng: address.lng,
+    },
     street: address.street,
     suite: address.suite,
     zipcode: address.zipcode,
@@ -29,38 +31,25 @@ export const toCompany = (company?: CompanySchema | null): Company | null => {
   return {
     bs: company.bs,
     catchPhrase: company.catchPhrase,
-    id: company.id,
     name: company.name,
-  };
-};
-
-export const toGeo = (geo?: GeoSchema | null): Geo | null => {
-  if (!geo) {
-    return null;
-  }
-
-  return {
-    lat: geo.lat,
-    lng: geo.lng,
   };
 };
 
 type ToUserParams = {
   addresses?: AddressSchema | null;
   companies?: CompanySchema | null;
-  geos?: GeoSchema | null;
   users?: UserSchema | null;
 };
 
 export const toUser = (params: ToUserParams | null): User | null => {
-  const { addresses: address, companies: company, geos: geo, users: user } = params || {};
+  const { addresses: address, companies: company, users: user } = params || {};
 
   if (!user) {
     return null;
   }
 
   return {
-    address: toAddress({ addresses: address, geos: geo }),
+    address: toAddress({ addresses: address }),
     company: toCompany(company),
     email: user.email,
     id: user.id,

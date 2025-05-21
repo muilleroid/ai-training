@@ -8,8 +8,12 @@ export const swagger = swaggerPlugin({
     },
     tags: [
       {
-        name: 'Users',
         description: 'User management endpoints',
+        name: 'Users',
+      },
+      {
+        description: 'Post management endpoints',
+        name: 'Posts',
       },
     ],
   },

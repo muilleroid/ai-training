@@ -1,17 +1,17 @@
 import { Elysia } from 'elysia';
 
 import { badRequestErrorDto, notFoundErrorDto } from 'core/dto';
-import { authGuard } from 'modules/auth/core/guards';
+import { AuthGuard } from 'modules/auth/core/guards';
 
-import { userService } from '../application';
+import { UserService } from '../application';
 
 import { addressDto, companyDto, geoDto, userDto, usersDto } from './dto';
 import { userIdParams } from './params';
 import { partialUserInput, userInput } from './input';
 
-export const userController = new Elysia({ name: 'user/controller', prefix: '/users' })
-  .use(authGuard)
-  .use(userService)
+export const UserController = new Elysia({ name: 'user/controller', prefix: '/users' })
+  .use(AuthGuard)
+  .use(UserService)
   .model({
     addressDto,
     companyDto,
@@ -29,14 +29,10 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
     },
     {
       authenticated: true,
-      response: usersDto,
       detail: {
-        tags: ['Users'],
-        summary: 'Get all users',
         description: 'Retrieve a list of all users in the system',
         responses: {
           '200': {
-            description: 'Successfully retrieved users',
             content: {
               'application/json': {
                 schema: {
@@ -44,9 +40,9 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
                 },
               },
             },
+            description: 'Successfully retrieved users',
           },
           '401': {
-            description: 'Unauthorized',
             content: {
               'application/json': {
                 schema: {
@@ -54,6 +50,7 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
                 },
               },
             },
+            description: 'Unauthorized',
           },
         },
         security: [
@@ -61,7 +58,10 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
             bearerAuth: [],
           },
         ],
+        summary: 'Get all users',
+        tags: ['Users'],
       },
+      response: usersDto,
     },
   )
   .get(
@@ -77,18 +77,10 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
     },
     {
       authenticated: true,
-      params: userIdParams,
-      response: {
-        200: userDto,
-        404: notFoundErrorDto,
-      },
       detail: {
-        tags: ['Users'],
-        summary: 'Get user by ID',
         description: 'Retrieve detailed information about a specific user by their unique identifier',
         responses: {
           '200': {
-            description: 'Successfully retrieved user information',
             content: {
               'application/json': {
                 schema: {
@@ -96,9 +88,9 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
                 },
               },
             },
+            description: 'Successfully retrieved user information',
           },
           '401': {
-            description: 'Unauthorized',
             content: {
               'application/json': {
                 schema: {
@@ -106,9 +98,9 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
                 },
               },
             },
+            description: 'Unauthorized',
           },
           '404': {
-            description: 'User not found with the specified ID',
             content: {
               'application/json': {
                 schema: {
@@ -116,6 +108,7 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
                 },
               },
             },
+            description: 'User not found with the specified ID',
           },
         },
         security: [
@@ -123,6 +116,13 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
             bearerAuth: [],
           },
         ],
+        summary: 'Get user by ID',
+        tags: ['Users'],
+      },
+      params: userIdParams,
+      response: {
+        200: userDto,
+        404: notFoundErrorDto,
       },
     },
   )
@@ -140,17 +140,10 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
     {
       authenticated: true,
       body: userInput,
-      response: {
-        201: userDto,
-        400: badRequestErrorDto,
-      },
       detail: {
-        tags: ['Users'],
-        summary: 'Create new user',
         description: 'Create a new user with complete profile information including address and company details',
         responses: {
           '201': {
-            description: 'User created successfully',
             content: {
               'application/json': {
                 schema: {
@@ -158,9 +151,9 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
                 },
               },
             },
+            description: 'User created successfully',
           },
           '400': {
-            description: 'Invalid user data or user cannot be created',
             content: {
               'application/json': {
                 schema: {
@@ -168,9 +161,9 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
                 },
               },
             },
+            description: 'Invalid user data or user cannot be created',
           },
           '401': {
-            description: 'Unauthorized',
             content: {
               'application/json': {
                 schema: {
@@ -178,6 +171,7 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
                 },
               },
             },
+            description: 'Unauthorized',
           },
         },
         security: [
@@ -185,6 +179,12 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
             bearerAuth: [],
           },
         ],
+        summary: 'Create new user',
+        tags: ['Users'],
+      },
+      response: {
+        201: userDto,
+        400: badRequestErrorDto,
       },
     },
   )
@@ -204,19 +204,11 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
     },
     {
       authenticated: true,
-      params: userIdParams,
       body: userInput,
-      response: {
-        200: userDto,
-        404: notFoundErrorDto,
-      },
       detail: {
-        tags: ['Users'],
-        summary: 'Update user',
         description: 'Update all fields of an existing user, requiring all user data to be provided',
         responses: {
           '200': {
-            description: 'User updated successfully',
             content: {
               'application/json': {
                 schema: {
@@ -224,9 +216,9 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
                 },
               },
             },
+            description: 'User updated successfully',
           },
           '401': {
-            description: 'Unauthorized',
             content: {
               'application/json': {
                 schema: {
@@ -234,9 +226,9 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
                 },
               },
             },
+            description: 'Unauthorized',
           },
           '404': {
-            description: 'User not found with the specified ID',
             content: {
               'application/json': {
                 schema: {
@@ -244,6 +236,7 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
                 },
               },
             },
+            description: 'User not found with the specified ID',
           },
         },
         security: [
@@ -251,6 +244,13 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
             bearerAuth: [],
           },
         ],
+        summary: 'Update user',
+        tags: ['Users'],
+      },
+      params: userIdParams,
+      response: {
+        200: userDto,
+        404: notFoundErrorDto,
       },
     },
   )
@@ -270,20 +270,11 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
     },
     {
       authenticated: true,
-      params: userIdParams,
       body: partialUserInput,
-      response: {
-        200: userDto,
-        404: notFoundErrorDto,
-      },
       detail: {
-        tags: ['Users'],
-        summary: 'Partially update user',
-        description:
-          'Update specific fields of an existing user, allowing partial updates of any user data including nested objects',
+        description: 'Update specific fields of an existing user, allowing partial updates of any user data.',
         responses: {
           '200': {
-            description: 'User updated successfully',
             content: {
               'application/json': {
                 schema: {
@@ -291,9 +282,9 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
                 },
               },
             },
+            description: 'User updated successfully',
           },
           '401': {
-            description: 'Unauthorized',
             content: {
               'application/json': {
                 schema: {
@@ -301,9 +292,9 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
                 },
               },
             },
+            description: 'Unauthorized',
           },
           '404': {
-            description: 'User not found with the specified ID',
             content: {
               'application/json': {
                 schema: {
@@ -311,6 +302,7 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
                 },
               },
             },
+            description: 'User not found with the specified ID',
           },
         },
         security: [
@@ -318,6 +310,13 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
             bearerAuth: [],
           },
         ],
+        summary: 'Partially update user',
+        tags: ['Users'],
+      },
+      params: userIdParams,
+      response: {
+        200: userDto,
+        404: notFoundErrorDto,
       },
     },
   )
@@ -334,18 +333,10 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
     },
     {
       authenticated: true,
-      params: userIdParams,
-      response: {
-        200: userDto,
-        404: notFoundErrorDto,
-      },
       detail: {
-        tags: ['Users'],
-        summary: 'Delete user',
         description: 'Delete an existing user and all associated data',
         responses: {
           '200': {
-            description: 'User deleted successfully',
             content: {
               'application/json': {
                 schema: {
@@ -353,9 +344,9 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
                 },
               },
             },
+            description: 'User deleted successfully',
           },
           '401': {
-            description: 'Unauthorized',
             content: {
               'application/json': {
                 schema: {
@@ -363,9 +354,9 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
                 },
               },
             },
+            description: 'Unauthorized',
           },
           '404': {
-            description: 'User not found with the specified ID',
             content: {
               'application/json': {
                 schema: {
@@ -373,6 +364,7 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
                 },
               },
             },
+            description: 'User not found with the specified ID',
           },
         },
         security: [
@@ -380,6 +372,13 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
             bearerAuth: [],
           },
         ],
+        summary: 'Delete user',
+        tags: ['Users'],
+      },
+      params: userIdParams,
+      response: {
+        200: userDto,
+        404: notFoundErrorDto,
       },
     },
   );

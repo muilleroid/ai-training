@@ -19,11 +19,11 @@ export type FindByIdParams = {
 };
 
 export type UpdateParams = {
-  commentId: string;
   comment: Partial<CommentInput>;
+  commentId: string;
 };
 
-export type CommentRepository = {
+export type TCommentRepository = {
   create: (params: CreateParams) => Promise<Comment | null>;
   delete: (params: DeleteParams) => Promise<Comment | null>;
   find: (params: FindParams) => Promise<Comment[]>;

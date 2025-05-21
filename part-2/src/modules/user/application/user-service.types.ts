@@ -13,6 +13,6 @@ export type FindByIdParams = {
 };
 
 export type UpdateParams = {
-  userId: string;
   user: PartialUserInput;
+  userId: string;
 };

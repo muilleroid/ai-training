@@ -4,23 +4,23 @@ import omitEmpty from 'omit-empty-es';
 
 import { setup } from 'core/setup';
 
-import type { CommentRepository } from 'modules/comment/domain/types';
+import type { TCommentRepository } from 'modules/comment/domain/types';
 
 import { commentSchema } from '../schemas';
 
 import { toComment, toCommentList } from './comment-repository.mapper';
 
-export const commentRepository = new Elysia({ name: 'comment/repository' })
+export const CommentRepository = new Elysia({ name: 'comment/repository' })
   .use(setup)
   .resolve({ as: 'global' }, ({ connection }) => {
-    const repository: CommentRepository = {
+    const commentRepository: TCommentRepository = {
       create: async ({ comment }) => {
         const [createdComment] = await connection.insert(commentSchema).values(comment).returning();
 
         return toComment(createdComment);
       },
       delete: async ({ commentId }) => {
-        const comment = await repository.findById({ commentId });
+        const comment = await commentRepository.findById({ commentId });
 
         await connection.delete(commentSchema).where(eq(commentSchema.id, commentId));
 
@@ -44,16 +44,16 @@ export const commentRepository = new Elysia({ name: 'comment/repository' })
 
         return toComment(comment);
       },
-      update: async ({ commentId, comment }) => {
+      update: async ({ comment, commentId }) => {
         const commentUpdates = omitEmpty<object>(comment);
 
         if (Object.keys(commentUpdates).length > 0) {
           await connection.update(commentSchema).set(commentUpdates).where(eq(commentSchema.id, commentId));
         }
 
-        return repository.findById({ commentId });
+        return commentRepository.findById({ commentId });
       },
     };
 
-    return { commentRepository: repository };
+    return { commentRepository };
   });

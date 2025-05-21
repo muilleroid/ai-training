@@ -1,17 +1,17 @@
 import { Elysia } from 'elysia';
 
 import { badRequestErrorDto, notFoundErrorDto } from 'core/dto';
-import { authGuard } from 'modules/auth/core/guards';
+import { AuthGuard } from 'modules/auth/core/guards';
 
-import { commentService } from '../application';
+import { CommentService } from '../application';
 
 import { commentDto, commentsDto } from './dto';
 import { commentInput, partialCommentInput } from './input';
 import { commentIdParams, findQueryParams } from './params';
 
-export const commentController = new Elysia({ name: 'comment/controller', prefix: '/comments' })
-  .use(authGuard)
-  .use(commentService)
+export const CommentController = new Elysia({ name: 'comment/controller', prefix: '/comments' })
+  .use(AuthGuard)
+  .use(CommentService)
   .model({
     commentDto,
     commentIdParams,
@@ -30,15 +30,10 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
     },
     {
       authenticated: true,
-      query: findQueryParams,
-      response: commentsDto,
       detail: {
-        tags: ['Comments'],
-        summary: 'Get all comments',
         description: 'Retrieve a list of comments with optional filtering by post ID or user ID',
         responses: {
           '200': {
-            description: 'Successfully retrieved comments',
             content: {
               'application/json': {
                 schema: {
@@ -46,9 +41,9 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
                 },
               },
             },
+            description: 'Successfully retrieved comments',
           },
           '401': {
-            description: 'Unauthorized',
             content: {
               'application/json': {
                 schema: {
@@ -56,6 +51,7 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
                 },
               },
             },
+            description: 'Unauthorized',
           },
         },
         security: [
@@ -63,12 +59,16 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
             bearerAuth: [],
           },
         ],
+        summary: 'Get all comments',
+        tags: ['Comments'],
       },
+      query: findQueryParams,
+      response: commentsDto,
     },
   )
   .get(
     '/:commentId',
-    async ({ params: { commentId }, status, commentService }) => {
+    async ({ commentService, params: { commentId }, status }) => {
       const comment = await commentService.findById({ commentId });
 
       if (!comment) {
@@ -79,18 +79,10 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
     },
     {
       authenticated: true,
-      params: commentIdParams,
-      response: {
-        200: commentDto,
-        404: notFoundErrorDto,
-      },
       detail: {
-        tags: ['Comments'],
-        summary: 'Get comment by ID',
         description: 'Retrieve a specific comment by its unique identifier',
         responses: {
           '200': {
-            description: 'Comment found and returned successfully',
             content: {
               'application/json': {
                 schema: {
@@ -98,9 +90,9 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
                 },
               },
             },
+            description: 'Comment found and returned successfully',
           },
           '401': {
-            description: 'Unauthorized',
             content: {
               'application/json': {
                 schema: {
@@ -108,9 +100,9 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
                 },
               },
             },
+            description: 'Unauthorized',
           },
           '404': {
-            description: 'Comment not found with the given ID',
             content: {
               'application/json': {
                 schema: {
@@ -118,6 +110,7 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
                 },
               },
             },
+            description: 'Comment not found with the given ID',
           },
         },
         security: [
@@ -125,12 +118,19 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
             bearerAuth: [],
           },
         ],
+        summary: 'Get comment by ID',
+        tags: ['Comments'],
+      },
+      params: commentIdParams,
+      response: {
+        200: commentDto,
+        404: notFoundErrorDto,
       },
     },
   )
   .post(
     '/',
-    async ({ body, status, commentService }) => {
+    async ({ body, commentService, status }) => {
       const comment = await commentService.create({ comment: body });
 
       if (!comment) {
@@ -142,17 +142,10 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
     {
       authenticated: true,
       body: commentInput,
-      response: {
-        201: commentDto,
-        400: badRequestErrorDto,
-      },
       detail: {
-        tags: ['Comments'],
-        summary: 'Create new comment',
         description: 'Create a new comment for a post',
         responses: {
           '201': {
-            description: 'Comment created successfully',
             content: {
               'application/json': {
                 schema: {
@@ -160,9 +153,9 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
                 },
               },
             },
+            description: 'Comment created successfully',
           },
           '400': {
-            description: 'Invalid comment data or comment cannot be created',
             content: {
               'application/json': {
                 schema: {
@@ -170,9 +163,9 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
                 },
               },
             },
+            description: 'Invalid comment data or comment cannot be created',
           },
           '401': {
-            description: 'Unauthorized',
             content: {
               'application/json': {
                 schema: {
@@ -180,6 +173,7 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
                 },
               },
             },
+            description: 'Unauthorized',
           },
         },
         security: [
@@ -187,12 +181,18 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
             bearerAuth: [],
           },
         ],
+        summary: 'Create new comment',
+        tags: ['Comments'],
+      },
+      response: {
+        201: commentDto,
+        400: badRequestErrorDto,
       },
     },
   )
   .put(
     '/:commentId',
-    async ({ body, params: { commentId }, status, commentService }) => {
+    async ({ body, commentService, params: { commentId }, status }) => {
       const comment = await commentService.update({
         comment: body,
         commentId,
@@ -206,19 +206,11 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
     },
     {
       authenticated: true,
-      params: commentIdParams,
       body: commentInput,
-      response: {
-        200: commentDto,
-        404: notFoundErrorDto,
-      },
       detail: {
-        tags: ['Comments'],
-        summary: 'Update comment',
         description: 'Update all fields of an existing comment',
         responses: {
           '200': {
-            description: 'Comment updated successfully',
             content: {
               'application/json': {
                 schema: {
@@ -226,9 +218,9 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
                 },
               },
             },
+            description: 'Comment updated successfully',
           },
           '401': {
-            description: 'Unauthorized',
             content: {
               'application/json': {
                 schema: {
@@ -236,9 +228,9 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
                 },
               },
             },
+            description: 'Unauthorized',
           },
           '404': {
-            description: 'Comment not found with the given ID',
             content: {
               'application/json': {
                 schema: {
@@ -246,6 +238,7 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
                 },
               },
             },
+            description: 'Comment not found with the given ID',
           },
         },
         security: [
@@ -253,12 +246,19 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
             bearerAuth: [],
           },
         ],
+        summary: 'Update comment',
+        tags: ['Comments'],
+      },
+      params: commentIdParams,
+      response: {
+        200: commentDto,
+        404: notFoundErrorDto,
       },
     },
   )
   .patch(
     '/:commentId',
-    async ({ body, params: { commentId }, status, commentService }) => {
+    async ({ body, commentService, params: { commentId }, status }) => {
       const comment = await commentService.update({
         comment: body,
         commentId,
@@ -272,19 +272,11 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
     },
     {
       authenticated: true,
-      params: commentIdParams,
       body: partialCommentInput,
-      response: {
-        200: commentDto,
-        404: notFoundErrorDto,
-      },
       detail: {
-        tags: ['Comments'],
-        summary: 'Partially update comment',
         description: 'Update specific fields of an existing comment',
         responses: {
           '200': {
-            description: 'Comment updated successfully',
             content: {
               'application/json': {
                 schema: {
@@ -292,9 +284,9 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
                 },
               },
             },
+            description: 'Comment updated successfully',
           },
           '401': {
-            description: 'Unauthorized',
             content: {
               'application/json': {
                 schema: {
@@ -302,9 +294,9 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
                 },
               },
             },
+            description: 'Unauthorized',
           },
           '404': {
-            description: 'Comment not found with the given ID',
             content: {
               'application/json': {
                 schema: {
@@ -312,6 +304,7 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
                 },
               },
             },
+            description: 'Comment not found with the given ID',
           },
         },
         security: [
@@ -319,12 +312,19 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
             bearerAuth: [],
           },
         ],
+        summary: 'Partially update comment',
+        tags: ['Comments'],
+      },
+      params: commentIdParams,
+      response: {
+        200: commentDto,
+        404: notFoundErrorDto,
       },
     },
   )
   .delete(
     '/:commentId',
-    async ({ params: { commentId }, status, commentService }) => {
+    async ({ commentService, params: { commentId }, status }) => {
       const comment = await commentService.delete({ commentId });
 
       if (!comment) {
@@ -335,18 +335,10 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
     },
     {
       authenticated: true,
-      params: commentIdParams,
-      response: {
-        200: commentDto,
-        404: notFoundErrorDto,
-      },
       detail: {
-        tags: ['Comments'],
-        summary: 'Delete comment',
         description: 'Delete an existing comment',
         responses: {
           '200': {
-            description: 'Comment deleted successfully',
             content: {
               'application/json': {
                 schema: {
@@ -354,9 +346,9 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
                 },
               },
             },
+            description: 'Comment deleted successfully',
           },
           '401': {
-            description: 'Unauthorized',
             content: {
               'application/json': {
                 schema: {
@@ -364,9 +356,9 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
                 },
               },
             },
+            description: 'Unauthorized',
           },
           '404': {
-            description: 'Comment not found with the given ID',
             content: {
               'application/json': {
                 schema: {
@@ -374,6 +366,7 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
                 },
               },
             },
+            description: 'Comment not found with the given ID',
           },
         },
         security: [
@@ -381,6 +374,13 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
             bearerAuth: [],
           },
         ],
+        summary: 'Delete comment',
+        tags: ['Comments'],
+      },
+      params: commentIdParams,
+      response: {
+        200: commentDto,
+        404: notFoundErrorDto,
       },
     },
   );

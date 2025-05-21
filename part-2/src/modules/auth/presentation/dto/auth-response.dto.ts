@@ -1,4 +1,5 @@
 import { t } from 'elysia';
+
 import { authDto } from './auth.dto';
 
 export const authResponseDto = t.Object(

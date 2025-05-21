@@ -19,8 +19,8 @@ export const companyDto = t.Object(
     }),
   },
   {
-    title: 'Company DTO',
     description: 'Data transfer object for company information',
+    title: 'Company DTO',
   },
 );
 

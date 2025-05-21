@@ -1,13 +1,13 @@
 import { Elysia } from 'elysia';
 
-import { postDomain } from '../domain';
+import { PostDomain } from '../domain';
 
 import type { CreateParams, DeleteParams, FindParams, FindByIdParams, UpdateParams } from './post-service.types';
 
-export const postService = new Elysia({ name: 'post/service' })
-  .use(postDomain)
+export const PostService = new Elysia({ name: 'post/service' })
+  .use(PostDomain)
   .resolve({ as: 'global' }, ({ postDomain }) => {
-    const service = {
+    const postService = {
       create: ({ post }: CreateParams) => {
         return postDomain.create({ post });
       },
@@ -28,5 +28,5 @@ export const postService = new Elysia({ name: 'post/service' })
       },
     };
 
-    return { postService: service };
+    return { postService };
   });

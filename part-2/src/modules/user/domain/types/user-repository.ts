@@ -15,11 +15,11 @@ export type FindByIdParams = {
 };
 
 export type UpdateParams = {
-  userId: string;
   user: PartialUserInput;
+  userId: string;
 };
 
-export type UserRepository = {
+export type TUserRepository = {
   create: (params: CreateParams) => Promise<User | null>;
   delete: (params: DeleteParams) => Promise<User | null>;
   find: () => Promise<User[]>;

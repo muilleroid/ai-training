@@ -35,8 +35,8 @@ export const userInput = t.Object(
     }),
   },
   {
-    title: 'User Input',
     description: 'Input data for creating a new user with required personal, address, and company information',
+    title: 'User Input',
   },
 );
 

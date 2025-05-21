@@ -12,7 +12,7 @@ type FindByEmailParams = {
   email: string;
 };
 
-export type AuthRepository = {
+export type TAuthRepository = {
   create: (params: CreateParams) => Promise<Auth | null>;
   findByEmail: (params: FindByEmailParams) => Promise<Auth | null>;
   findById: (params: FindById) => Promise<Auth | null>;

@@ -9,12 +9,12 @@ export const unauthorizedErrorDto = t.Object(
     }),
   },
   {
-    title: 'Unauthorized Error DTO',
     description: 'Error response for authentication failures and invalid or missing credentials',
     examples: [
       {
         message: 'Unauthorized',
       },
     ],
+    title: 'Unauthorized Error DTO',
   },
 );

@@ -27,8 +27,8 @@ export const addressInput = t.Object(
     }),
   },
   {
-    title: 'Address Input',
     description: 'Input data for creating or updating address information',
+    title: 'Address Input',
   },
 );
 

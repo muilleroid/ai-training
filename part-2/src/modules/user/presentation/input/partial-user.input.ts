@@ -13,8 +13,8 @@ export const partialUserInput = t.Composite(
     }),
   ],
   {
+    description: 'Partial input data for updating user information.',
     title: 'Partial User Input',
-    description: 'Partial input data for updating user information. All fields are optional including nested address and company data.',
   },
 );
 

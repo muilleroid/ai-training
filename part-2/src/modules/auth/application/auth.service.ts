@@ -1,15 +1,15 @@
 import { Elysia } from 'elysia';
 
-import { authDomain, cryptoDomain, jwtDomain } from '../domain';
+import { AuthDomain, CryptoDomain, JwtDomain } from '../domain';
 
 import type { SignInParams, SignUpParams } from './auth-service.types';
 
-export const authService = new Elysia({ name: 'auth/service' })
-  .use(authDomain)
-  .use(cryptoDomain)
-  .use(jwtDomain)
+export const AuthService = new Elysia({ name: 'auth/service' })
+  .use(AuthDomain)
+  .use(CryptoDomain)
+  .use(JwtDomain)
   .resolve({ as: 'global' }, ({ authDomain, cryptoDomain, jwtDomain }) => {
-    const service = {
+    const authService = {
       findById: ({ userId }: { userId: string }) => {
         return authDomain.findById({ userId });
       },
@@ -60,5 +60,5 @@ export const authService = new Elysia({ name: 'auth/service' })
       },
     };
 
-    return { authService: service };
+    return { authService };
   });

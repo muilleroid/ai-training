@@ -9,12 +9,12 @@ export const notFoundErrorDto = t.Object(
     }),
   },
   {
-    title: 'Not Found Error DTO',
     description: 'Error response when the requested resource does not exist or cannot be found',
     examples: [
       {
         message: 'Resource not found',
       },
     ],
+    title: 'Not Found Error DTO',
   },
 );

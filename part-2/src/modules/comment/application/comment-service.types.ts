@@ -18,6 +18,6 @@ export type FindByIdParams = {
 };
 
 export type UpdateParams = {
-  commentId: string;
   comment: Partial<CommentInput>;
+  commentId: string;
 };

@@ -17,6 +17,6 @@ export type FindByIdParams = {
 };
 
 export type UpdateParams = {
-  postId: string;
   post: Partial<PostInput>;
+  postId: string;
 };

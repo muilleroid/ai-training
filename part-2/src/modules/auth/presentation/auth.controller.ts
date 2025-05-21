@@ -2,15 +2,15 @@ import { Elysia } from 'elysia';
 
 import { badRequestErrorDto, unauthorizedErrorDto } from 'core/dto';
 
-import { authService } from '../application';
-import { authGuard } from '../core/guards';
+import { AuthService } from '../application';
+import { AuthGuard } from '../core/guards';
 
 import { authDto, authResponseDto } from './dto';
 import { signInInput, signUpInput } from './input';
 
-export const authController = new Elysia({ name: 'auth' })
-  .use(authGuard)
-  .use(authService)
+export const AuthController = new Elysia({ name: 'auth' })
+  .use(AuthGuard)
+  .use(AuthService)
   .model({
     authDto,
     authResponseDto,
@@ -30,17 +30,9 @@ export const authController = new Elysia({ name: 'auth' })
     },
     {
       authenticated: true,
-      withUserId: true,
-      response: {
-        200: authDto,
-        401: unauthorizedErrorDto,
-      },
       detail: {
-        tags: ['Auth'],
-        summary: 'Get current user',
         responses: {
           '200': {
-            description: 'Successfully retrieved current user',
             content: {
               'application/json': {
                 schema: {
@@ -48,9 +40,9 @@ export const authController = new Elysia({ name: 'auth' })
                 },
               },
             },
+            description: 'Successfully retrieved current user',
           },
           '401': {
-            description: 'Unauthorized',
             content: {
               'application/json': {
                 schema: {
@@ -58,6 +50,7 @@ export const authController = new Elysia({ name: 'auth' })
                 },
               },
             },
+            description: 'Unauthorized',
           },
         },
         security: [
@@ -65,12 +58,19 @@ export const authController = new Elysia({ name: 'auth' })
             bearerAuth: [],
           },
         ],
+        summary: 'Get current user',
+        tags: ['Auth'],
       },
+      response: {
+        200: authDto,
+        401: unauthorizedErrorDto,
+      },
+      withUserId: true,
     },
   )
   .post(
     '/sign-in',
-    async ({ body: { email, password }, status, authService }) => {
+    async ({ authService, body: { email, password }, status }) => {
       const auth = await authService.signIn({
         email,
         password,
@@ -84,16 +84,9 @@ export const authController = new Elysia({ name: 'auth' })
     },
     {
       body: signInInput,
-      response: {
-        200: authResponseDto,
-        401: unauthorizedErrorDto,
-      },
       detail: {
-        tags: ['Auth'],
-        summary: 'Sign in',
         responses: {
           '200': {
-            description: 'Successfully signed in',
             content: {
               'application/json': {
                 schema: {
@@ -101,9 +94,9 @@ export const authController = new Elysia({ name: 'auth' })
                 },
               },
             },
+            description: 'Successfully signed in',
           },
           '401': {
-            description: 'Invalid credentials',
             content: {
               'application/json': {
                 schema: {
@@ -111,14 +104,21 @@ export const authController = new Elysia({ name: 'auth' })
                 },
               },
             },
+            description: 'Invalid credentials',
           },
         },
+        summary: 'Sign in',
+        tags: ['Auth'],
+      },
+      response: {
+        200: authResponseDto,
+        401: unauthorizedErrorDto,
       },
     },
   )
   .post(
     '/sign-up',
-    async ({ body: { email, name, password }, status, authService }) => {
+    async ({ authService, body: { email, name, password }, status }) => {
       const token = await authService.signUp({
         email,
         name,
@@ -133,16 +133,9 @@ export const authController = new Elysia({ name: 'auth' })
     },
     {
       body: signUpInput,
-      response: {
-        201: authResponseDto,
-        400: badRequestErrorDto,
-      },
       detail: {
-        tags: ['Auth'],
-        summary: 'Sign up',
         responses: {
           '201': {
-            description: 'Successfully signed up',
             content: {
               'application/json': {
                 schema: {
@@ -150,9 +143,9 @@ export const authController = new Elysia({ name: 'auth' })
                 },
               },
             },
+            description: 'Successfully signed up',
           },
           '400': {
-            description: 'Cannot sign up',
             content: {
               'application/json': {
                 schema: {
@@ -160,8 +153,15 @@ export const authController = new Elysia({ name: 'auth' })
                 },
               },
             },
+            description: 'Cannot sign up',
           },
         },
+        summary: 'Sign up',
+        tags: ['Auth'],
+      },
+      response: {
+        201: authResponseDto,
+        400: badRequestErrorDto,
       },
     },
   );

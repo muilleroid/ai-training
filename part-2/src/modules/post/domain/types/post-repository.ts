@@ -18,11 +18,11 @@ export type FindByIdParams = {
 };
 
 export type UpdateParams = {
-  postId: string;
   post: Partial<PostInput>;
+  postId: string;
 };
 
-export type PostRepository = {
+export type TPostRepository = {
   create: (params: CreateParams) => Promise<Post | null>;
   delete: (params: DeleteParams) => Promise<Post | null>;
   find: (params: FindParams) => Promise<Post[]>;

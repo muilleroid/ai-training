@@ -27,8 +27,8 @@ export const addressDto = t.Object(
     }),
   },
   {
-    title: 'Address DTO',
     description: 'Data transfer object for address information including optional geographical coordinates',
+    title: 'Address DTO',
   },
 );
 

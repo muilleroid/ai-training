@@ -17,8 +17,8 @@ export const commentInput = t.Object(
     }),
   },
   {
-    title: 'Comment Input',
     description: 'Input data for creating a new comment',
+    title: 'Comment Input',
   },
 );
 

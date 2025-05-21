@@ -14,8 +14,8 @@ export const geoInput = t.Object(
     }),
   },
   {
-    title: 'Geo Input',
     description: 'Input data for geographical coordinates',
+    title: 'Geo Input',
   },
 );
 

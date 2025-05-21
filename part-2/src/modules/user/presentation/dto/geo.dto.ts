@@ -14,8 +14,8 @@ export const geoDto = t.Object(
     }),
   },
   {
-    title: 'Geo DTO',
     description: 'Data transfer object for geographical coordinates',
+    title: 'Geo DTO',
   },
 );
 

@@ -1,11 +1,11 @@
-import bearer from '@elysiajs/bearer';
+import Bearer from '@elysiajs/bearer';
 import { Elysia } from 'elysia';
 
-import { jwtDomain } from '../../domain';
+import { JwtDomain } from '../../domain';
 
-export const authGuard = new Elysia({ name: 'auth/guard' })
-  .use(bearer())
-  .use(jwtDomain)
+export const AuthGuard = new Elysia({ name: 'auth/guard' })
+  .use(Bearer())
+  .use(JwtDomain)
   .macro(({ onBeforeHandle }) => {
     return {
       authenticated: () => {

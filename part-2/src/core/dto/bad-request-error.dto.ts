@@ -9,12 +9,12 @@ export const badRequestErrorDto = t.Object(
     }),
   },
   {
-    title: 'Bad Request Error DTO',
     description: 'Error response for invalid requests, including validation errors and malformed data',
     examples: [
       {
         message: 'Bad request',
       },
     ],
+    title: 'Bad Request Error DTO',
   },
 );

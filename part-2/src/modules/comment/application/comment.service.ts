@@ -1,13 +1,13 @@
 import { Elysia } from 'elysia';
 
-import { commentDomain } from '../domain';
+import { CommentDomain } from '../domain';
 
 import type { CreateParams, DeleteParams, FindByIdParams, FindParams, UpdateParams } from './comment-service.types';
 
-export const commentService = new Elysia({ name: 'comment/service' })
-  .use(commentDomain)
+export const CommentService = new Elysia({ name: 'comment/service' })
+  .use(CommentDomain)
   .resolve({ as: 'global' }, ({ commentDomain }) => {
-    const service = {
+    const commentService = {
       create: ({ comment }: CreateParams) => {
         return commentDomain.create({ comment });
       },
@@ -31,5 +31,5 @@ export const commentService = new Elysia({ name: 'comment/service' })
       },
     };
 
-    return { commentService: service };
+    return { commentService };
   });

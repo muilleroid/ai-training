@@ -19,8 +19,8 @@ export const companyInput = t.Object(
     }),
   },
   {
-    title: 'Company Input',
     description: 'Input data for creating or updating company information',
+    title: 'Company Input',
   },
 );
 

@@ -1,14 +1,14 @@
 import { Elysia } from 'elysia';
 
-import { authGuard } from 'modules/auth/core/guards';
+import { AuthGuard } from 'modules/auth/core/guards';
 import { commentsDto } from 'modules/comment/presentation/dto';
 import { postIdParams } from 'modules/post/presentation/params';
 
-import { postCommentService } from '../application/post-comment.service';
+import { PostCommentService } from '../application/post-comment.service';
 
-export const postCommentController = new Elysia({ name: 'post-comment/controller', prefix: '/posts' })
-  .use(authGuard)
-  .use(postCommentService)
+export const PostCommentController = new Elysia({ name: 'post-comment/controller', prefix: '/posts' })
+  .use(AuthGuard)
+  .use(PostCommentService)
   .get(
     '/:postId/comments',
     ({ params: { postId }, postCommentsService }) => {
@@ -16,15 +16,10 @@ export const postCommentController = new Elysia({ name: 'post-comment/controller
     },
     {
       authenticated: true,
-      params: postIdParams,
-      response: commentsDto,
       detail: {
-        tags: ['Posts', 'Comments'],
-        summary: 'Get all comments for a post',
         description: 'Retrieve all comments associated with a specific post',
         responses: {
           '200': {
-            description: 'Successfully retrieved comments for the post',
             content: {
               'application/json': {
                 schema: {
@@ -32,9 +27,9 @@ export const postCommentController = new Elysia({ name: 'post-comment/controller
                 },
               },
             },
+            description: 'Successfully retrieved comments for the post',
           },
           '401': {
-            description: 'Unauthorized',
             content: {
               'application/json': {
                 schema: {
@@ -42,6 +37,7 @@ export const postCommentController = new Elysia({ name: 'post-comment/controller
                 },
               },
             },
+            description: 'Unauthorized',
           },
         },
         security: [
@@ -49,6 +45,10 @@ export const postCommentController = new Elysia({ name: 'post-comment/controller
             bearerAuth: [],
           },
         ],
+        summary: 'Get all comments for a post',
+        tags: ['Posts', 'Comments'],
       },
+      params: postIdParams,
+      response: commentsDto,
     },
   );

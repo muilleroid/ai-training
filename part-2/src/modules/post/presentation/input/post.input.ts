@@ -18,8 +18,8 @@ export const postInput = t.Object(
     }),
   },
   {
-    title: 'Post Input',
     description: 'Input data for creating a new post',
+    title: 'Post Input',
   },
 );
 

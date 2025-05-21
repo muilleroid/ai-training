@@ -10,7 +10,7 @@ const traceExporter = new OTLPTraceExporter({
 const spanProcessor = new BatchSpanProcessor(traceExporter);
 
 export const instrumentation = opentelemetry({
-  serviceName: Bun.env.OTEL_SERVICE_NAME,
   instrumentations: [new PgInstrumentation()],
+  serviceName: Bun.env.OTEL_SERVICE_NAME,
   spanProcessors: [spanProcessor],
 });

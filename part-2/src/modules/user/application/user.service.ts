@@ -1,13 +1,13 @@
 import { Elysia } from 'elysia';
 
-import { userDomain } from '../domain';
+import { UserDomain } from '../domain';
 
 import type { CreateParams, DeleteParams, FindByIdParams, UpdateParams } from './user-service.types';
 
-export const userService = new Elysia({ name: 'user/service' })
-  .use(userDomain)
+export const UserService = new Elysia({ name: 'user/service' })
+  .use(UserDomain)
   .resolve({ as: 'global' }, ({ userDomain }) => {
-    const service = {
+    const userService = {
       create: ({ user }: CreateParams) => {
         return userDomain.create({ user });
       },
@@ -28,5 +28,5 @@ export const userService = new Elysia({ name: 'user/service' })
       },
     };
 
-    return { userService: service };
+    return { userService };
   });

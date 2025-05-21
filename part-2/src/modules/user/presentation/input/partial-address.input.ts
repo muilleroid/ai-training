@@ -11,8 +11,9 @@ export const partialAddressInput = t.Composite(
     }),
   ],
   {
+    description:
+      'Partial input data for updating address information. All fields are optional including nested geo data.',
     title: 'Partial Address Input',
-    description: 'Partial input data for updating address information. All fields are optional including nested geo data.',
   },
 );
 

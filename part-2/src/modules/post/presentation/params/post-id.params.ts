@@ -8,7 +8,7 @@ export const postIdParams = t.Object(
     }),
   },
   {
-    title: 'Post ID Parameters',
     description: 'Parameters for operations that require a post ID',
+    title: 'Post ID Parameters',
   },
 );

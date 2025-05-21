@@ -3,16 +3,16 @@ import { Elysia } from 'elysia';
 
 import { setup } from 'core/setup';
 
-import type { AuthRepository } from '../../domain/types';
+import type { TAuthRepository } from '../../domain/types';
 
 import { authSchema } from '../schemas';
 
 import { toAuth } from './auth-repository.mapper';
 
-export const authRepository = new Elysia({ name: 'auth/repository' })
+export const AuthRepository = new Elysia({ name: 'auth/repository' })
   .use(setup)
   .resolve({ as: 'global' }, ({ connection }) => {
-    const repository: AuthRepository = {
+    const authRepository: TAuthRepository = {
       create: async ({ auth }) => {
         const [createdAuth] = await connection
           .insert(authSchema)
@@ -37,5 +37,5 @@ export const authRepository = new Elysia({ name: 'auth/repository' })
       },
     };
 
-    return { authRepository: repository };
+    return { authRepository };
   });

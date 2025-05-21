@@ -1,4 +1,3 @@
-
 export type HashParams = {
   password: string;
 };

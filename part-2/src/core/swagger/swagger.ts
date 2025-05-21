@@ -2,6 +2,15 @@ import { swagger as swaggerPlugin } from '@elysiajs/swagger';
 
 export const swagger = swaggerPlugin({
   documentation: {
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          bearerFormat: 'JWT',
+          scheme: 'bearer',
+          type: 'http',
+        },
+      },
+    },
     info: {
       title: 'Documentation',
       version: '1.0.0',
@@ -24,47 +33,6 @@ export const swagger = swaggerPlugin({
         name: 'Users',
       },
     ],
-    components: {
-      responses: {
-        '400': {
-          description: 'Bad request',
-          content: {
-            'application/json': {
-              schema: {
-                $ref: '#/components/schemas/badRequestErrorDto',
-              },
-            },
-          },
-        },
-        '401': {
-          description: 'Unauthorized',
-          content: {
-            'application/json': {
-              schema: {
-                $ref: '#/components/schemas/unauthorizedErrorDto',
-              },
-            },
-          },
-        },
-        '404': {
-          description: 'Resource not found',
-          content: {
-            'application/json': {
-              schema: {
-                $ref: '#/components/schemas/notFoundErrorDto',
-              },
-            },
-          },
-        },
-      },
-      securitySchemes: {
-        bearerAuth: {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT',
-        },
-      },
-    },
   },
   path: '/swagger',
 });

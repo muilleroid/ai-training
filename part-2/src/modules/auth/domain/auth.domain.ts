@@ -1,13 +1,13 @@
 import { Elysia } from 'elysia';
 
-import { authRepository } from '../infrastructure/repositories';
+import { AuthRepository } from '../infrastructure/repositories';
 
 import type { CreateParams, FindByEmailParams, FindByIdParams } from './auth-domain.types';
 
-export const authDomain = new Elysia({ name: 'auth/domain' })
-  .use(authRepository)
+export const AuthDomain = new Elysia({ name: 'auth/domain' })
+  .use(AuthRepository)
   .resolve({ as: 'global' }, ({ authRepository }) => {
-    const domain = {
+    const authDomain = {
       create: ({ auth }: CreateParams) => {
         return authRepository.create({ auth });
       },
@@ -19,5 +19,5 @@ export const authDomain = new Elysia({ name: 'auth/domain' })
       },
     };
 
-    return { authDomain: domain };
+    return { authDomain };
   });

@@ -1,13 +1,13 @@
 import { Elysia } from 'elysia';
 
-import { commentRepository } from '../infrastructure/repositories';
+import { CommentRepository } from '../infrastructure/repositories';
 
 import type { CreateParams, DeleteParams, FindByIdParams, FindParams, UpdateParams } from './comment-domain.types';
 
-export const commentDomain = new Elysia({ name: 'comment/domain' })
-  .use(commentRepository)
+export const CommentDomain = new Elysia({ name: 'comment/domain' })
+  .use(CommentRepository)
   .resolve({ as: 'global' }, ({ commentRepository }) => {
-    const domain = {
+    const commentDomain = {
       create: ({ comment }: CreateParams) => {
         return commentRepository.create({ comment });
       },
@@ -31,5 +31,5 @@ export const commentDomain = new Elysia({ name: 'comment/domain' })
       },
     };
 
-    return { commentDomain: domain };
+    return { commentDomain };
   });

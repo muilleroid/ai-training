@@ -23,4 +23,5 @@ const app = new Elysia()
   .use(routes)
   .listen(config.application.port);
 
+// eslint-disable-next-line no-console
 console.log(`Listening on ${app.server!.url}`);

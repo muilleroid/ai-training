@@ -20,8 +20,8 @@ export const postDto = t.Object(
     }),
   },
   {
-    title: 'Post DTO',
     description: 'Data transfer object for a post',
+    title: 'Post DTO',
   },
 );
 

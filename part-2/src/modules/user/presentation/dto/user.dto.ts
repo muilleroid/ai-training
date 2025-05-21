@@ -39,8 +39,8 @@ export const userDto = t.Object(
     }),
   },
   {
-    title: 'User DTO',
     description: 'Data transfer object for user information including optional address and company details',
+    title: 'User DTO',
   },
 );
 

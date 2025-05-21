@@ -2,8 +2,8 @@ import { Elysia } from 'elysia';
 
 import type { HashParams, VerifyParams } from './crypto-domain.types';
 
-export const cryptoDomain = new Elysia({ name: 'crypto/domain' }).resolve({ as: 'global' }, () => {
-  const domain = {
+export const CryptoDomain = new Elysia({ name: 'crypto/domain' }).resolve({ as: 'global' }, () => {
+  const cryptoDomain = {
     hash: ({ password }: HashParams) => {
       return Bun.password.hash(password, { algorithm: 'bcrypt' });
     },
@@ -12,5 +12,5 @@ export const cryptoDomain = new Elysia({ name: 'crypto/domain' }).resolve({ as: 
     },
   };
 
-  return { cryptoDomain: domain };
+  return { cryptoDomain };
 });

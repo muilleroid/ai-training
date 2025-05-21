@@ -20,8 +20,8 @@ export const commentDto = t.Object(
     }),
   },
   {
-    title: 'Comment DTO',
     description: 'Data transfer object for a comment',
+    title: 'Comment DTO',
   },
 );
 

@@ -8,8 +8,8 @@ export const userIdParams = t.Object(
     }),
   },
   {
-    title: 'User ID Parameters',
     description: 'Parameters for identifying a specific user',
+    title: 'User ID Parameters',
   },
 );
 

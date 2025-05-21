@@ -8,8 +8,8 @@ export const commentIdParams = t.Object(
     }),
   },
   {
-    title: 'Comment ID Parameters',
     description: 'Parameters for operations that require a comment ID',
+    title: 'Comment ID Parameters',
   },
 );
 

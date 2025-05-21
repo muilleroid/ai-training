@@ -12,7 +12,7 @@ import { toPost, toPostList } from './post-repository.mapper';
 
 export const PostRepository = new Elysia({ name: 'post/repository' })
   .use(setup)
-  .resolve({ as: 'global' }, ({ connection }) => {
+  .derive({ as: 'global' }, function derivePostRepository({ connection }) {
     const postRepository: TPostRepository = {
       create: async ({ post }) => {
         const [createdPost] = await connection.insert(postSchema).values(post).returning();

@@ -12,7 +12,7 @@ import { toUser, toUserList } from './user-repository.mapper';
 
 export const UserRepository = new Elysia({ name: 'user/repository' })
   .use(setup)
-  .resolve({ as: 'global' }, ({ connection }) => {
+  .derive({ as: 'global' }, function deriveUserRepository({ connection }) {
     const userRepository: TUserRepository = {
       create: async ({ user }) => {
         const { address, company } = user;

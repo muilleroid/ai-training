@@ -11,7 +11,7 @@ import { toAuth } from './auth-repository.mapper';
 
 export const AuthRepository = new Elysia({ name: 'auth/repository' })
   .use(setup)
-  .resolve({ as: 'global' }, ({ connection }) => {
+  .derive({ as: 'global' }, function deriveAuthRepository({ connection }) {
     const authRepository: TAuthRepository = {
       create: async ({ auth }) => {
         const [createdAuth] = await connection

@@ -6,7 +6,7 @@ import type { CreateParams, DeleteParams, FindByIdParams, FindParams, UpdatePara
 
 export const PostDomain = new Elysia({ name: 'post/domain' })
   .use(PostRepository)
-  .resolve({ as: 'global' }, ({ postRepository }) => {
+  .derive({ as: 'global' }, function derivePostDomain({ postRepository }) {
     const postDomain = {
       create: ({ post }: CreateParams) => {
         return postRepository.create({ post });

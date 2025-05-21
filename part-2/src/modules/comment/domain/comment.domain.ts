@@ -6,7 +6,7 @@ import type { CreateParams, DeleteParams, FindByIdParams, FindParams, UpdatePara
 
 export const CommentDomain = new Elysia({ name: 'comment/domain' })
   .use(CommentRepository)
-  .resolve({ as: 'global' }, ({ commentRepository }) => {
+  .derive({ as: 'global' }, function deriveCommentDomain({ commentRepository }) {
     const commentDomain = {
       create: ({ comment }: CreateParams) => {
         return commentRepository.create({ comment });

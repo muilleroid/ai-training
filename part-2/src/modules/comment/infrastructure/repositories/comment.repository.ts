@@ -12,7 +12,7 @@ import { toComment, toCommentList } from './comment-repository.mapper';
 
 export const CommentRepository = new Elysia({ name: 'comment/repository' })
   .use(setup)
-  .resolve({ as: 'global' }, ({ connection }) => {
+  .derive({ as: 'global' }, function deriveCommentRepository({ connection }) {
     const commentRepository: TCommentRepository = {
       create: async ({ comment }) => {
         const [createdComment] = await connection.insert(commentSchema).values(comment).returning();

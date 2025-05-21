@@ -6,7 +6,7 @@ import type { CreateParams, FindByEmailParams, FindByIdParams } from './auth-dom
 
 export const AuthDomain = new Elysia({ name: 'auth/domain' })
   .use(AuthRepository)
-  .resolve({ as: 'global' }, ({ authRepository }) => {
+  .derive({ as: 'global' }, function deriveAuthDomain({ authRepository }) {
     const authDomain = {
       create: ({ auth }: CreateParams) => {
         return authRepository.create({ auth });

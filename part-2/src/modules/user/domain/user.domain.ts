@@ -6,7 +6,7 @@ import type { CreateParams, DeleteParams, FindByIdParams, UpdateParams } from '.
 
 export const UserDomain = new Elysia({ name: 'user/domain' })
   .use(UserRepository)
-  .resolve({ as: 'global' }, ({ userRepository }) => {
+  .derive({ as: 'global' }, function deriveUserDomain({ userRepository }) {
     const userDomain = {
       create: ({ user }: CreateParams) => {
         return userRepository.create({ user });

@@ -8,7 +8,7 @@ export const AuthService = new Elysia({ name: 'auth/service' })
   .use(AuthDomain)
   .use(CryptoDomain)
   .use(JwtDomain)
-  .resolve({ as: 'global' }, ({ authDomain, cryptoDomain, jwtDomain }) => {
+  .derive({ as: 'global' }, function deriveAuthService({ authDomain, cryptoDomain, jwtDomain }) {
     const authService = {
       findById: ({ userId }: { userId: string }) => {
         return authDomain.findById({ userId });

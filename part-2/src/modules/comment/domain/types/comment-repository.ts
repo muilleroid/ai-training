@@ -9,16 +9,13 @@ export type DeleteParams = {
   commentId: string;
 };
 
+export type FindParams = {
+  postId?: string;
+  userId?: string;
+};
+
 export type FindByIdParams = {
   commentId: string;
-};
-
-export type FindByPostIdParams = {
-  postId: string;
-};
-
-export type FindByUserIdParams = {
-  userId: string;
 };
 
 export type UpdateParams = {
@@ -29,9 +26,7 @@ export type UpdateParams = {
 export type CommentRepository = {
   create: (params: CreateParams) => Promise<Comment | null>;
   delete: (params: DeleteParams) => Promise<Comment | null>;
-  find: () => Promise<Comment[]>;
+  find: (params: FindParams) => Promise<Comment[]>;
   findById: (params: FindByIdParams) => Promise<Comment | null>;
-  findByPostId: (params: FindByPostIdParams) => Promise<Comment[]>;
-  findByUserId: (params: FindByUserIdParams) => Promise<Comment[]>;
   update: (params: UpdateParams) => Promise<Comment | null>;
 };

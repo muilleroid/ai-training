@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { Elysia } from 'elysia';
 import omitEmpty from 'omit-empty-es';
 
@@ -26,8 +26,16 @@ export const commentRepository = new Elysia({ name: 'comment/repository' })
 
         return comment;
       },
-      find: async () => {
-        const comments = await connection.select().from(commentSchema);
+      find: async ({ postId, userId } = {}) => {
+        const filters = [
+          ...(postId ? [eq(commentSchema.postId, postId)] : []),
+          ...(userId ? [eq(commentSchema.userId, userId)] : []),
+        ];
+
+        const comments = await connection
+          .select()
+          .from(commentSchema)
+          .where(filters.length > 0 ? and(...filters) : undefined);
 
         return toCommentList(comments);
       },
@@ -35,16 +43,6 @@ export const commentRepository = new Elysia({ name: 'comment/repository' })
         const [comment] = await connection.select().from(commentSchema).where(eq(commentSchema.id, commentId)).limit(1);
 
         return toComment(comment);
-      },
-      findByPostId: async ({ postId }) => {
-        const comments = await connection.select().from(commentSchema).where(eq(commentSchema.postId, postId));
-
-        return toCommentList(comments);
-      },
-      findByUserId: async ({ userId }) => {
-        const comments = await connection.select().from(commentSchema).where(eq(commentSchema.userId, userId));
-
-        return toCommentList(comments);
       },
       update: async ({ commentId, comment }) => {
         const commentUpdates = omitEmpty<object>(comment);

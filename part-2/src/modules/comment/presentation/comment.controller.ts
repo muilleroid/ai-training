@@ -6,7 +6,7 @@ import { commentService } from '../application';
 
 import { commentDto, commentsDto } from './dto';
 import { commentInput, partialCommentInput } from './input';
-import { commentIdParams } from './params';
+import { commentIdParams, findQueryParams } from './params';
 
 export const commentController = new Elysia({ name: 'comment/controller', prefix: '/comments' })
   .use(commentService)
@@ -17,10 +17,14 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
   })
   .get(
     '/',
-    ({ commentService }) => {
-      return commentService.find();
+    ({ commentService, query: { postId, userId } }) => {
+      return commentService.find({
+        postId,
+        userId,
+      });
     },
     {
+      query: findQueryParams,
       response: commentsDto,
       detail: {
         tags: ['Comments'],

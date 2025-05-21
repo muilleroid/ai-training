@@ -8,16 +8,13 @@ export type DeleteParams = {
   commentId: string;
 };
 
+export type FindParams = {
+  postId?: string;
+  userId?: string;
+};
+
 export type FindByIdParams = {
   commentId: string;
-};
-
-export type FindByPostIdParams = {
-  postId: string;
-};
-
-export type FindByUserIdParams = {
-  userId: string;
 };
 
 export type UpdateParams = {

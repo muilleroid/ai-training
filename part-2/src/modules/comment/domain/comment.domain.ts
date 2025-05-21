@@ -2,14 +2,7 @@ import { Elysia } from 'elysia';
 
 import { commentRepository } from '../infrastructure/repositories';
 
-import type {
-  CreateParams,
-  DeleteParams,
-  FindByIdParams,
-  FindByPostIdParams,
-  FindByUserIdParams,
-  UpdateParams,
-} from './comment-domain.types';
+import type { CreateParams, DeleteParams, FindByIdParams, FindParams, UpdateParams } from './comment-domain.types';
 
 export const commentDomain = new Elysia({ name: 'comment/domain' })
   .use(commentRepository)
@@ -22,17 +15,14 @@ export const commentDomain = new Elysia({ name: 'comment/domain' })
         delete: ({ commentId }: DeleteParams) => {
           return commentRepository.delete({ commentId });
         },
-        find: () => {
-          return commentRepository.find();
+        find: ({ postId, userId }: FindParams = {}) => {
+          return commentRepository.find({
+            postId,
+            userId,
+          });
         },
         findById: ({ commentId }: FindByIdParams) => {
           return commentRepository.findById({ commentId });
-        },
-        findByPostId: ({ postId }: FindByPostIdParams) => {
-          return commentRepository.findByPostId({ postId });
-        },
-        findByUserId: ({ userId }: FindByUserIdParams) => {
-          return commentRepository.findByUserId({ userId });
         },
         update: ({ comment, commentId }: UpdateParams) => {
           return commentRepository.update({

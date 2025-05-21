@@ -8,12 +8,12 @@ export type DeleteParams = {
   postId: string;
 };
 
-export type FindByIdParams = {
-  postId: string;
+export type FindParams = {
+  userId?: string;
 };
 
-export type FindByUserIdParams = {
-  userId: string;
+export type FindByIdParams = {
+  postId: string;
 };
 
 export type UpdateParams = {

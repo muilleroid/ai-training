@@ -26,8 +26,11 @@ export const postRepository = new Elysia({ name: 'post/repository' })
 
         return post;
       },
-      find: async () => {
-        const posts = await connection.select().from(postSchema);
+      find: async ({ userId } = {}) => {
+        const posts = await connection
+          .select()
+          .from(postSchema)
+          .where(userId ? eq(postSchema.userId, userId) : undefined);
 
         return toPostList(posts);
       },
@@ -35,11 +38,6 @@ export const postRepository = new Elysia({ name: 'post/repository' })
         const [post] = await connection.select().from(postSchema).where(eq(postSchema.id, postId)).limit(1);
 
         return toPost(post);
-      },
-      findByUserId: async ({ userId }) => {
-        const posts = await connection.select().from(postSchema).where(eq(postSchema.userId, userId));
-
-        return toPostList(posts);
       },
       update: async ({ postId, post }) => {
         const postUpdates = omitEmpty<object>(post);

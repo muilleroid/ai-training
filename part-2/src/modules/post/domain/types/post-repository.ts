@@ -9,12 +9,12 @@ export type DeleteParams = {
   postId: string;
 };
 
-export type FindByIdParams = {
-  postId: string;
+export type FindParams = {
+  userId?: string;
 };
 
-export type FindByUserIdParams = {
-  userId: string;
+export type FindByIdParams = {
+  postId: string;
 };
 
 export type UpdateParams = {
@@ -25,8 +25,7 @@ export type UpdateParams = {
 export type PostRepository = {
   create: (params: CreateParams) => Promise<Post | null>;
   delete: (params: DeleteParams) => Promise<Post | null>;
-  find: () => Promise<Post[]>;
+  find: (params: FindParams) => Promise<Post[]>;
   findById: (params: FindByIdParams) => Promise<Post | null>;
-  findByUserId: (params: FindByUserIdParams) => Promise<Post[]>;
   update: (params: UpdateParams) => Promise<Post | null>;
 };

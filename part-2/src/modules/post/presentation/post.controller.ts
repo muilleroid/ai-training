@@ -6,7 +6,7 @@ import { postService } from '../application';
 
 import { postDto, postsDto } from './dto';
 import { partialPostInput, postInput } from './input';
-import { postIdParams } from './params';
+import { findQueryParams, postIdParams } from './params';
 
 export const postController = new Elysia({ name: 'post/controller', prefix: '/posts' })
   .use(postService)
@@ -17,11 +17,12 @@ export const postController = new Elysia({ name: 'post/controller', prefix: '/po
   })
   .get(
     '/',
-    ({ postService }) => {
-      return postService.find();
+    ({ postService, query: { userId } }) => {
+      return postService.find({ userId });
     },
     {
       response: postsDto,
+      query: findQueryParams,
       detail: {
         tags: ['Posts'],
         summary: 'Get all posts',
@@ -85,32 +86,6 @@ export const postController = new Elysia({ name: 'post/controller', prefix: '/po
       },
     },
   )
-  // .get(
-  //   '/users/:userId',
-  //   async ({ params: { userId }, postService }) => {
-  //     return postService.findByUserId({ userId });
-  //   },
-  //   {
-  //     params: userIdParams,
-  //     response: postsDto,
-  //     detail: {
-  //       tags: ['Posts'],
-  //       summary: "Get all user's posts",
-  //       responses: {
-  //         '200': {
-  //           description: 'Successfully retrieved posts',
-  //           content: {
-  //             'application/json': {
-  //               schema: {
-  //                 $ref: '#/components/schemas/postsDto',
-  //               },
-  //             },
-  //           },
-  //         },
-  //       },
-  //     },
-  //   },
-  // )
   .post(
     '/',
     async ({ body, status, postService }) => {

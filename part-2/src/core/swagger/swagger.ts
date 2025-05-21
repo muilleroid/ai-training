@@ -8,6 +8,10 @@ export const swagger = swaggerPlugin({
     },
     tags: [
       {
+        description: 'Authentication endpoints',
+        name: 'Auth',
+      },
+      {
         description: 'Comment management endpoints',
         name: 'Comments',
       },
@@ -20,6 +24,15 @@ export const swagger = swaggerPlugin({
         name: 'Users',
       },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
   },
   path: '/swagger',
 });

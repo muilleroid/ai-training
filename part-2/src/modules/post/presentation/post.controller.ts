@@ -1,6 +1,7 @@
 import { Elysia } from 'elysia';
 
 import { errorDto } from 'core/dto';
+import { authGuard } from 'modules/auth/core/guards';
 
 import { postService } from '../application';
 
@@ -9,6 +10,7 @@ import { partialPostInput, postInput } from './input';
 import { findQueryParams, postIdParams } from './params';
 
 export const postController = new Elysia({ name: 'post/controller', prefix: '/posts' })
+  .use(authGuard)
   .use(postService)
   .model({
     errorDto,
@@ -21,6 +23,7 @@ export const postController = new Elysia({ name: 'post/controller', prefix: '/po
       return postService.find({ userId });
     },
     {
+      authenticated: true,
       response: postsDto,
       query: findQueryParams,
       detail: {
@@ -37,7 +40,22 @@ export const postController = new Elysia({ name: 'post/controller', prefix: '/po
               },
             },
           },
+          '401': {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/errorDto',
+                },
+              },
+            },
+          },
         },
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
       },
     },
   )
@@ -53,6 +71,7 @@ export const postController = new Elysia({ name: 'post/controller', prefix: '/po
       return post;
     },
     {
+      authenticated: true,
       params: postIdParams,
       response: {
         200: postDto,
@@ -72,6 +91,16 @@ export const postController = new Elysia({ name: 'post/controller', prefix: '/po
               },
             },
           },
+          '401': {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/errorDto',
+                },
+              },
+            },
+          },
           '404': {
             description: 'Post not found',
             content: {
@@ -83,6 +112,11 @@ export const postController = new Elysia({ name: 'post/controller', prefix: '/po
             },
           },
         },
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
       },
     },
   )
@@ -92,16 +126,17 @@ export const postController = new Elysia({ name: 'post/controller', prefix: '/po
       const post = await postService.create({ post: body });
 
       if (!post) {
-        return status(422, { message: 'Post cannot be created' });
+        return status(400, { message: 'Post cannot be created' });
       }
 
       return status(201, post);
     },
     {
+      authenticated: true,
       body: postInput,
       response: {
         201: postDto,
-        422: errorDto,
+        400: errorDto,
       },
       detail: {
         tags: ['Posts'],
@@ -117,7 +152,8 @@ export const postController = new Elysia({ name: 'post/controller', prefix: '/po
               },
             },
           },
-          '422': {
+
+          '400': {
             description: 'Post cannot be created',
             content: {
               'application/json': {
@@ -127,7 +163,22 @@ export const postController = new Elysia({ name: 'post/controller', prefix: '/po
               },
             },
           },
+          '401': {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/errorDto',
+                },
+              },
+            },
+          },
         },
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
       },
     },
   )
@@ -146,6 +197,7 @@ export const postController = new Elysia({ name: 'post/controller', prefix: '/po
       return post;
     },
     {
+      authenticated: true,
       params: postIdParams,
       body: postInput,
       response: {
@@ -166,6 +218,16 @@ export const postController = new Elysia({ name: 'post/controller', prefix: '/po
               },
             },
           },
+          '401': {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/errorDto',
+                },
+              },
+            },
+          },
           '404': {
             description: 'Post not found',
             content: {
@@ -177,6 +239,11 @@ export const postController = new Elysia({ name: 'post/controller', prefix: '/po
             },
           },
         },
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
       },
     },
   )
@@ -195,6 +262,7 @@ export const postController = new Elysia({ name: 'post/controller', prefix: '/po
       return post;
     },
     {
+      authenticated: true,
       params: postIdParams,
       body: partialPostInput,
       response: {
@@ -215,6 +283,16 @@ export const postController = new Elysia({ name: 'post/controller', prefix: '/po
               },
             },
           },
+          '401': {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/errorDto',
+                },
+              },
+            },
+          },
           '404': {
             description: 'Post not found',
             content: {
@@ -226,6 +304,11 @@ export const postController = new Elysia({ name: 'post/controller', prefix: '/po
             },
           },
         },
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
       },
     },
   )
@@ -241,6 +324,7 @@ export const postController = new Elysia({ name: 'post/controller', prefix: '/po
       return post;
     },
     {
+      authenticated: true,
       params: postIdParams,
       response: {
         200: postDto,
@@ -260,6 +344,16 @@ export const postController = new Elysia({ name: 'post/controller', prefix: '/po
               },
             },
           },
+          '401': {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/errorDto',
+                },
+              },
+            },
+          },
           '404': {
             description: 'Post not found',
             content: {
@@ -271,6 +365,11 @@ export const postController = new Elysia({ name: 'post/controller', prefix: '/po
             },
           },
         },
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
       },
     },
   );

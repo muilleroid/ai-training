@@ -1,6 +1,7 @@
 import { Elysia } from 'elysia';
 
 import { errorDto } from 'core/dto';
+import { authGuard } from 'modules/auth/core/guards';
 
 import { userService } from '../application';
 
@@ -9,6 +10,7 @@ import { userIdParams } from './params';
 import { partialUserInput, userInput } from './input';
 
 export const userController = new Elysia({ name: 'user/controller', prefix: '/users' })
+  .use(authGuard)
   .use(userService)
   .model({
     errorDto,
@@ -21,6 +23,7 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
       return userService.find();
     },
     {
+      authenticated: true,
       response: usersDto,
       detail: {
         tags: ['Users'],
@@ -36,7 +39,22 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
               },
             },
           },
+          '401': {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/errorDto',
+                },
+              },
+            },
+          },
         },
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
       },
     },
   )
@@ -52,6 +70,7 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
       return user;
     },
     {
+      authenticated: true,
       params: userIdParams,
       response: {
         200: userDto,
@@ -71,6 +90,16 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
               },
             },
           },
+          '401': {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/errorDto',
+                },
+              },
+            },
+          },
           '404': {
             description: 'User not found',
             content: {
@@ -82,6 +111,11 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
             },
           },
         },
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
       },
     },
   )
@@ -91,16 +125,17 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
       const user = await userService.create({ user: body });
 
       if (!user) {
-        return status(422, { message: 'User cannot be created' });
+        return status(400, { message: 'User cannot be created' });
       }
 
       return status(201, user);
     },
     {
+      authenticated: true,
       body: userInput,
       response: {
         201: userDto,
-        422: errorDto,
+        400: errorDto,
       },
       detail: {
         tags: ['Users'],
@@ -116,7 +151,7 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
               },
             },
           },
-          '422': {
+          '400': {
             description: 'User cannot be created',
             content: {
               'application/json': {
@@ -126,7 +161,22 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
               },
             },
           },
+          '401': {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/errorDto',
+                },
+              },
+            },
+          },
         },
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
       },
     },
   )
@@ -145,6 +195,7 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
       return user;
     },
     {
+      authenticated: true,
       params: userIdParams,
       body: userInput,
       response: {
@@ -165,6 +216,16 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
               },
             },
           },
+          '401': {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/errorDto',
+                },
+              },
+            },
+          },
           '404': {
             description: 'User not found',
             content: {
@@ -176,6 +237,11 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
             },
           },
         },
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
       },
     },
   )
@@ -194,6 +260,7 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
       return user;
     },
     {
+      authenticated: true,
       params: userIdParams,
       body: partialUserInput,
       response: {
@@ -214,6 +281,16 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
               },
             },
           },
+          '401': {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/errorDto',
+                },
+              },
+            },
+          },
           '404': {
             description: 'User not found',
             content: {
@@ -225,6 +302,11 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
             },
           },
         },
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
       },
     },
   )
@@ -240,6 +322,7 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
       return user;
     },
     {
+      authenticated: true,
       params: userIdParams,
       response: {
         200: userDto,
@@ -259,6 +342,16 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
               },
             },
           },
+          '401': {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/errorDto',
+                },
+              },
+            },
+          },
           '404': {
             description: 'User not found',
             content: {
@@ -270,6 +363,11 @@ export const userController = new Elysia({ name: 'user/controller', prefix: '/us
             },
           },
         },
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
       },
     },
   );

@@ -50,6 +50,13 @@
       "when": 1747826748206,
       "tag": "0006_mysterious_edwin_jarvis",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1747829419041,
+      "tag": "0007_white_spencer_smythe",
+      "breakpoints": true
     }
   ]
 }

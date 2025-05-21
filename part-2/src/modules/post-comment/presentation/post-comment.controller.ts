@@ -1,11 +1,13 @@
 import { Elysia } from 'elysia';
 
+import { authGuard } from 'modules/auth/core/guards';
 import { commentsDto } from 'modules/comment/presentation/dto';
 import { postIdParams } from 'modules/post/presentation/params';
 
 import { postCommentService } from '../application/post-comment.service';
 
 export const postCommentController = new Elysia({ name: 'post-comment/controller', prefix: '/posts' })
+  .use(authGuard)
   .use(postCommentService)
   .model({
     commentsDto,
@@ -16,6 +18,7 @@ export const postCommentController = new Elysia({ name: 'post-comment/controller
       return postCommentsService.findByPostId({ postId });
     },
     {
+      authenticated: true,
       params: postIdParams,
       response: commentsDto,
       detail: {
@@ -32,7 +35,22 @@ export const postCommentController = new Elysia({ name: 'post-comment/controller
               },
             },
           },
+          '401': {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/errorDto',
+                },
+              },
+            },
+          },
         },
       },
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
     },
   );

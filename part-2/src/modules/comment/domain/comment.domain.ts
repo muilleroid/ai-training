@@ -7,29 +7,29 @@ import type { CreateParams, DeleteParams, FindByIdParams, FindParams, UpdatePara
 export const commentDomain = new Elysia({ name: 'comment/domain' })
   .use(commentRepository)
   .resolve({ as: 'global' }, ({ commentRepository }) => {
-    return {
-      commentDomain: {
-        create: ({ comment }: CreateParams) => {
-          return commentRepository.create({ comment });
-        },
-        delete: ({ commentId }: DeleteParams) => {
-          return commentRepository.delete({ commentId });
-        },
-        find: ({ postId, userId }: FindParams = {}) => {
-          return commentRepository.find({
-            postId,
-            userId,
-          });
-        },
-        findById: ({ commentId }: FindByIdParams) => {
-          return commentRepository.findById({ commentId });
-        },
-        update: ({ comment, commentId }: UpdateParams) => {
-          return commentRepository.update({
-            comment,
-            commentId,
-          });
-        },
+    const domain = {
+      create: ({ comment }: CreateParams) => {
+        return commentRepository.create({ comment });
+      },
+      delete: ({ commentId }: DeleteParams) => {
+        return commentRepository.delete({ commentId });
+      },
+      find: ({ postId, userId }: FindParams = {}) => {
+        return commentRepository.find({
+          postId,
+          userId,
+        });
+      },
+      findById: ({ commentId }: FindByIdParams) => {
+        return commentRepository.findById({ commentId });
+      },
+      update: ({ comment, commentId }: UpdateParams) => {
+        return commentRepository.update({
+          comment,
+          commentId,
+        });
       },
     };
+
+    return { commentDomain: domain };
   });

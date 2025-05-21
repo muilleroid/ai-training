@@ -71,8 +71,6 @@ export const authController = new Elysia({ name: 'auth' })
   .post(
     '/sign-in',
     async ({ body: { email, password }, status, authService }) => {
-      authService.setUserId(userId);
-
       const auth = await authService.signIn({
         email,
         password,

@@ -1,33 +1,30 @@
-FROM oven/bun:1 AS build
+FROM oven/bun:1.2.13-alpine AS base
 
-WORKDIR /app
+WORKDIR /usr/src/app
 
-COPY package.json bun.lock ./
+###
 
-RUN bun install --frozen-lockfile
+FROM base AS install
 
+RUN mkdir -p /temp/prod
+
+COPY package.json bun.lock /temp/prod/
+
+WORKDIR /temp/prod
+
+RUN bun install --frozen-lockfile --production
+
+###
+
+FROM base AS release
+
+COPY --from=install /temp/prod/node_modules node_modules
 COPY . .
 
 ENV NODE_ENV=production
 
-RUN bun build \
-  --compile \
-  --minify-whitespace \
-  --minify-syntax \
-  --target bun \
-  --outfile server \
-  ./src/index.ts
+USER bun
 
-###
+EXPOSE 3000/tcp
 
-FROM gcr.io/distroless/base
-
-WORKDIR /app
-
-COPY --from=build /app/server server
-
-ENV NODE_ENV=production
-
-CMD ["./server"]
-
-EXPOSE 3000
+ENTRYPOINT [ "bun", "run", "./src/index.ts" ]

@@ -2,5 +2,9 @@ import Elysia from 'elysia';
 
 import { connection } from 'core/database';
 import { jwt } from 'core/jwt';
+import { logger } from 'core/logger';
 
-export const setup = new Elysia({ name: 'setup' }).use(jwt).decorate('connection', connection);
+export const setup = new Elysia({ name: 'setup' })
+  .use(jwt)
+  .decorate('connection', connection)
+  .decorate('logger', logger);

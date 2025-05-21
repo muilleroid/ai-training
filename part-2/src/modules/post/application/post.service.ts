@@ -7,26 +7,26 @@ import type { CreateParams, DeleteParams, FindParams, FindByIdParams, UpdatePara
 export const postService = new Elysia({ name: 'post/service' })
   .use(postDomain)
   .resolve({ as: 'global' }, ({ postDomain }) => {
-    return {
-      postService: {
-        create: ({ post }: CreateParams) => {
-          return postDomain.create({ post });
-        },
-        delete: ({ postId }: DeleteParams) => {
-          return postDomain.delete({ postId });
-        },
-        find: ({ userId }: FindParams = {}) => {
-          return postDomain.find({ userId });
-        },
-        findById: ({ postId }: FindByIdParams) => {
-          return postDomain.findById({ postId });
-        },
-        update: ({ post, postId }: UpdateParams) => {
-          return postDomain.update({
-            post,
-            postId,
-          });
-        },
+    const service = {
+      create: ({ post }: CreateParams) => {
+        return postDomain.create({ post });
+      },
+      delete: ({ postId }: DeleteParams) => {
+        return postDomain.delete({ postId });
+      },
+      find: ({ userId }: FindParams = {}) => {
+        return postDomain.find({ userId });
+      },
+      findById: ({ postId }: FindByIdParams) => {
+        return postDomain.findById({ postId });
+      },
+      update: ({ post, postId }: UpdateParams) => {
+        return postDomain.update({
+          post,
+          postId,
+        });
       },
     };
+
+    return { postService: service };
   });

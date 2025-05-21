@@ -9,7 +9,7 @@ export const authGuard = new Elysia({ name: 'auth/guard' })
   .macro(({ onBeforeHandle }) => {
     return {
       authenticated: () => {
-        onBeforeHandle(async ({ bearer, jwtDomain, status }) => {
+        onBeforeHandle(async function authenticated({ bearer, jwtDomain, status }) {
           const payload = await jwtDomain.verify({ token: bearer });
 
           if (!payload) {

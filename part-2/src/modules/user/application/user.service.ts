@@ -7,26 +7,26 @@ import type { CreateParams, DeleteParams, FindByIdParams, UpdateParams } from '.
 export const userService = new Elysia({ name: 'user/service' })
   .use(userDomain)
   .resolve({ as: 'global' }, ({ userDomain }) => {
-    return {
-      userService: {
-        create: ({ user }: CreateParams) => {
-          return userDomain.create({ user });
-        },
-        delete: ({ userId }: DeleteParams) => {
-          return userDomain.delete({ userId });
-        },
-        find: () => {
-          return userDomain.find();
-        },
-        findById: ({ userId }: FindByIdParams) => {
-          return userDomain.findById({ userId });
-        },
-        update: ({ user, userId }: UpdateParams) => {
-          return userDomain.update({
-            user,
-            userId,
-          });
-        },
+    const service = {
+      create: ({ user }: CreateParams) => {
+        return userDomain.create({ user });
+      },
+      delete: ({ userId }: DeleteParams) => {
+        return userDomain.delete({ userId });
+      },
+      find: () => {
+        return userDomain.find();
+      },
+      findById: ({ userId }: FindByIdParams) => {
+        return userDomain.findById({ userId });
+      },
+      update: ({ user, userId }: UpdateParams) => {
+        return userDomain.update({
+          user,
+          userId,
+        });
       },
     };
+
+    return { userService: service };
   });

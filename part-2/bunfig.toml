@@ -1,2 +1,3 @@
-[install]
-exact = true
+install.exact = true
+
+preload = ["./src/instrumentation.ts"]

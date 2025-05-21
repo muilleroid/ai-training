@@ -5,17 +5,15 @@ type Config = {
     secret: string;
     expiration: string;
   };
+  logger: { level: string };
 };
 
 export const config: Config = {
-  application: {
-    port: parseInt(Bun.env.PORT || '3000', 10),
-  },
-  database: {
-    url: Bun.env.DATABASE_URL!,
-  },
+  application: { port: parseInt(Bun.env.PORT || '3000', 10) },
+  database: { url: Bun.env.DATABASE_URL! },
   jwt: {
     secret: Bun.env.JWT_SECRET!,
     expiration: Bun.env.JWT_EXPIRATION || '7d',
   },
+  logger: { level: Bun.env.LOG_LEVEL || 'info' },
 };

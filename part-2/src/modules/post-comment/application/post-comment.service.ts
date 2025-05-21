@@ -7,13 +7,13 @@ import type { FindByPostIdParams } from './post-comment-service.types';
 export const postCommentService = new Elysia({ name: 'post-comment/service' })
   .use(commentDomain)
   .resolve({ as: 'global' }, ({ commentDomain }) => {
-    return {
-      postCommentsService: {
-        findByPostId: ({ postId }: FindByPostIdParams) => {
-          return commentDomain.find({
-            postId,
-          });
-        },
+    const service = {
+      findByPostId: ({ postId }: FindByPostIdParams) => {
+        return commentDomain.find({
+          postId,
+        });
       },
     };
+
+    return { postCommentsService: service };
   });

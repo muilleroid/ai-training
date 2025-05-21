@@ -9,56 +9,56 @@ export const authService = new Elysia({ name: 'auth/service' })
   .use(cryptoDomain)
   .use(jwtDomain)
   .resolve({ as: 'global' }, ({ authDomain, cryptoDomain, jwtDomain }) => {
-    return {
-      authService: {
-        findById: ({ userId }: { userId: string }) => {
-          return authDomain.findById({ userId });
-        },
-        signIn: async ({ email, password }: SignInParams) => {
-          const auth = await authDomain.findByEmail({ email });
+    const service = {
+      findById: ({ userId }: { userId: string }) => {
+        return authDomain.findById({ userId });
+      },
+      signIn: async ({ email, password }: SignInParams) => {
+        const auth = await authDomain.findByEmail({ email });
 
-          if (!auth) {
-            return null;
-          }
+        if (!auth) {
+          return null;
+        }
 
-          const passwordValid = await cryptoDomain.verify({
-            password,
-            passwordHash: auth.passwordHash,
-          });
+        const passwordValid = await cryptoDomain.verify({
+          password,
+          passwordHash: auth.passwordHash,
+        });
 
-          if (!passwordValid) {
-            return null;
-          }
+        if (!passwordValid) {
+          return null;
+        }
 
-          const token = await jwtDomain.sign({ id: auth.id });
+        const token = await jwtDomain.sign({ id: auth.id });
 
-          return {
-            auth,
-            token,
-          };
-        },
-        signUp: async ({ email, name, password }: SignUpParams) => {
-          const passwordHash = await cryptoDomain.hash({ password });
+        return {
+          auth,
+          token,
+        };
+      },
+      signUp: async ({ email, name, password }: SignUpParams) => {
+        const passwordHash = await cryptoDomain.hash({ password });
 
-          const auth = await authDomain.create({
-            auth: {
-              email,
-              name,
-              passwordHash,
-            },
-          });
+        const auth = await authDomain.create({
+          auth: {
+            email,
+            name,
+            passwordHash,
+          },
+        });
 
-          if (!auth) {
-            return null;
-          }
+        if (!auth) {
+          return null;
+        }
 
-          const token = await jwtDomain.sign({ id: auth.id });
+        const token = await jwtDomain.sign({ id: auth.id });
 
-          return {
-            auth,
-            token,
-          };
-        },
+        return {
+          auth,
+          token,
+        };
       },
     };
+
+    return { authService: service };
   });

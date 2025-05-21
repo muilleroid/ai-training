@@ -19,18 +19,6 @@ export const userRepository = new Elysia({ name: 'user/repository' })
         const { geo } = address;
 
         const userId = await connection.transaction(async (tx) => {
-          const [createdAddress] = await tx
-            .insert(addressSchema)
-            .values({
-              city: address.city,
-              lat: geo.lat,
-              lng: geo.lng,
-              street: address.street,
-              suite: address.suite,
-              zipcode: address.zipcode,
-            })
-            .returning({ id: addressSchema.id });
-
           const [createdCompany] = await tx
             .insert(companySchema)
             .values({
@@ -48,10 +36,21 @@ export const userRepository = new Elysia({ name: 'user/repository' })
               phone: user.phone,
               username: user.username,
               website: user.website,
-              addressId: createdAddress.id,
               companyId: createdCompany.id,
             })
             .returning({ id: userSchema.id });
+
+          await tx
+            .insert(addressSchema)
+            .values({
+              city: address.city,
+              lat: geo.lat,
+              lng: geo.lng,
+              street: address.street,
+              suite: address.suite,
+              zipcode: address.zipcode,
+              userId: createdUser.id,
+            });
 
           return createdUser.id;
         });
@@ -69,7 +68,7 @@ export const userRepository = new Elysia({ name: 'user/repository' })
         const users = await connection
           .select()
           .from(userSchema)
-          .leftJoin(addressSchema, eq(userSchema.addressId, addressSchema.id))
+          .leftJoin(addressSchema, eq(userSchema.id, addressSchema.userId))
           .leftJoin(companySchema, eq(userSchema.companyId, companySchema.id));
 
         return toUserList(users);
@@ -79,7 +78,7 @@ export const userRepository = new Elysia({ name: 'user/repository' })
           .select()
           .from(userSchema)
           .where(eq(userSchema.id, userId))
-          .leftJoin(addressSchema, eq(userSchema.addressId, addressSchema.id))
+          .leftJoin(addressSchema, eq(userSchema.id, addressSchema.userId))
           .leftJoin(companySchema, eq(userSchema.companyId, companySchema.id))
           .limit(1);
 
@@ -90,7 +89,7 @@ export const userRepository = new Elysia({ name: 'user/repository' })
 
         const updated = await connection.transaction(async (tx) => {
           const [foundUser] = await tx
-            .select({ companyId: userSchema.companyId, addressId: userSchema.addressId })
+            .select({ companyId: userSchema.companyId })
             .from(userSchema)
             .where(eq(userSchema.id, userId))
             .limit(1);
@@ -99,7 +98,7 @@ export const userRepository = new Elysia({ name: 'user/repository' })
             return false;
           }
 
-          const { addressId, companyId } = foundUser;
+          const { companyId } = foundUser;
 
           if (address) {
             const addressUpdates = omitEmpty<object>({
@@ -114,7 +113,10 @@ export const userRepository = new Elysia({ name: 'user/repository' })
             });
 
             if (Object.keys(addressUpdates).length > 0) {
-              await tx.update(addressSchema).set(addressUpdates).where(eq(addressSchema.id, addressId));
+              await tx
+                .update(addressSchema)
+                .set(addressUpdates)
+                .where(eq(addressSchema.userId, userId));
             }
           }
 
@@ -126,7 +128,10 @@ export const userRepository = new Elysia({ name: 'user/repository' })
             });
 
             if (Object.keys(companyUpdates).length > 0) {
-              await tx.update(companySchema).set(companyUpdates).where(eq(companySchema.id, companyId));
+              await tx
+                .update(companySchema)
+                .set(companyUpdates)
+                .where(eq(companySchema.id, companyId));
             }
           }
 
@@ -139,7 +144,10 @@ export const userRepository = new Elysia({ name: 'user/repository' })
           });
 
           if (Object.keys(userUpdates).length > 0) {
-            await tx.update(userSchema).set(userUpdates).where(eq(userSchema.id, userId));
+            await tx
+              .update(userSchema)
+              .set(userUpdates)
+              .where(eq(userSchema.id, userId));
           }
 
           return true;

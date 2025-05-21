@@ -1,6 +1,8 @@
 import { createId } from '@paralleldrive/cuid2';
 import { pgTable, text, varchar } from 'drizzle-orm/pg-core';
 
+import { userSchema } from './user.schema';
+
 export const addressSchema = pgTable('addresses', {
   city: text('city').notNull(),
   id: varchar('id').$defaultFn(createId).primaryKey(),
@@ -8,6 +10,9 @@ export const addressSchema = pgTable('addresses', {
   lng: text('lng').notNull(),
   street: text('street').notNull(),
   suite: text('suite').notNull(),
+  userId: varchar('user_id')
+    .notNull()
+    .references(() => userSchema.id, { onDelete: 'cascade' }),
   zipcode: text('zipcode').notNull(),
 });
 

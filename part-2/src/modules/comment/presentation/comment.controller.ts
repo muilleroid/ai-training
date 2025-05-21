@@ -1,6 +1,6 @@
 import { Elysia } from 'elysia';
 
-import { errorDto } from 'core/dto';
+import { badRequestErrorDto, notFoundErrorDto } from 'core/dto';
 import { authGuard } from 'modules/auth/core/guards';
 
 import { commentService } from '../application';
@@ -13,9 +13,12 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
   .use(authGuard)
   .use(commentService)
   .model({
-    errorDto,
     commentDto,
+    commentIdParams,
+    commentInput,
     commentsDto,
+    findQueryParams,
+    partialCommentInput,
   })
   .get(
     '/',
@@ -32,6 +35,7 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
       detail: {
         tags: ['Comments'],
         summary: 'Get all comments',
+        description: 'Retrieve a list of comments with optional filtering by post ID or user ID',
         responses: {
           '200': {
             description: 'Successfully retrieved comments',
@@ -48,7 +52,7 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/errorDto',
+                  $ref: '#/components/schemas/unauthorizedErrorDto',
                 },
               },
             },
@@ -78,14 +82,15 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
       params: commentIdParams,
       response: {
         200: commentDto,
-        404: errorDto,
+        404: notFoundErrorDto,
       },
       detail: {
         tags: ['Comments'],
         summary: 'Get comment by ID',
+        description: 'Retrieve a specific comment by its unique identifier',
         responses: {
           '200': {
-            description: 'Successfully retrieved comment',
+            description: 'Comment found and returned successfully',
             content: {
               'application/json': {
                 schema: {
@@ -99,17 +104,17 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/errorDto',
+                  $ref: '#/components/schemas/unauthorizedErrorDto',
                 },
               },
             },
           },
           '404': {
-            description: 'Comment not found',
+            description: 'Comment not found with the given ID',
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/errorDto',
+                  $ref: '#/components/schemas/notFoundErrorDto',
                 },
               },
             },
@@ -139,11 +144,12 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
       body: commentInput,
       response: {
         201: commentDto,
-        400: errorDto,
+        400: badRequestErrorDto,
       },
       detail: {
         tags: ['Comments'],
         summary: 'Create new comment',
+        description: 'Create a new comment for a post',
         responses: {
           '201': {
             description: 'Comment created successfully',
@@ -156,11 +162,11 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
             },
           },
           '400': {
-            description: 'Comment cannot be created',
+            description: 'Invalid comment data or comment cannot be created',
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/errorDto',
+                  $ref: '#/components/schemas/badRequestErrorDto',
                 },
               },
             },
@@ -170,7 +176,7 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/errorDto',
+                  $ref: '#/components/schemas/unauthorizedErrorDto',
                 },
               },
             },
@@ -204,11 +210,12 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
       body: commentInput,
       response: {
         200: commentDto,
-        404: errorDto,
+        404: notFoundErrorDto,
       },
       detail: {
         tags: ['Comments'],
         summary: 'Update comment',
+        description: 'Update all fields of an existing comment',
         responses: {
           '200': {
             description: 'Comment updated successfully',
@@ -225,28 +232,28 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/errorDto',
+                  $ref: '#/components/schemas/unauthorizedErrorDto',
                 },
               },
             },
           },
           '404': {
-            description: 'Comment not found',
+            description: 'Comment not found with the given ID',
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/errorDto',
+                  $ref: '#/components/schemas/notFoundErrorDto',
                 },
               },
             },
           },
         },
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
       },
-      security: [
-        {
-          bearerAuth: [],
-        },
-      ],
     },
   )
   .patch(
@@ -269,11 +276,12 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
       body: partialCommentInput,
       response: {
         200: commentDto,
-        404: errorDto,
+        404: notFoundErrorDto,
       },
       detail: {
         tags: ['Comments'],
         summary: 'Partially update comment',
+        description: 'Update specific fields of an existing comment',
         responses: {
           '200': {
             description: 'Comment updated successfully',
@@ -290,28 +298,28 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/errorDto',
+                  $ref: '#/components/schemas/unauthorizedErrorDto',
                 },
               },
             },
           },
           '404': {
-            description: 'Comment not found',
+            description: 'Comment not found with the given ID',
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/errorDto',
+                  $ref: '#/components/schemas/notFoundErrorDto',
                 },
               },
             },
           },
         },
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
       },
-      security: [
-        {
-          bearerAuth: [],
-        },
-      ],
     },
   )
   .delete(
@@ -330,11 +338,12 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
       params: commentIdParams,
       response: {
         200: commentDto,
-        404: errorDto,
+        404: notFoundErrorDto,
       },
       detail: {
         tags: ['Comments'],
         summary: 'Delete comment',
+        description: 'Delete an existing comment',
         responses: {
           '200': {
             description: 'Comment deleted successfully',
@@ -351,17 +360,17 @@ export const commentController = new Elysia({ name: 'comment/controller', prefix
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/errorDto',
+                  $ref: '#/components/schemas/unauthorizedErrorDto',
                 },
               },
             },
           },
           '404': {
-            description: 'Comment not found',
+            description: 'Comment not found with the given ID',
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/errorDto',
+                  $ref: '#/components/schemas/notFoundErrorDto',
                 },
               },
             },

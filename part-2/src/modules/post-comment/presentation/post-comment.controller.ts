@@ -9,9 +9,6 @@ import { postCommentService } from '../application/post-comment.service';
 export const postCommentController = new Elysia({ name: 'post-comment/controller', prefix: '/posts' })
   .use(authGuard)
   .use(postCommentService)
-  .model({
-    commentsDto,
-  })
   .get(
     '/:postId/comments',
     ({ params: { postId }, postCommentsService }) => {
@@ -22,8 +19,9 @@ export const postCommentController = new Elysia({ name: 'post-comment/controller
       params: postIdParams,
       response: commentsDto,
       detail: {
-        tags: ['Posts'],
+        tags: ['Posts', 'Comments'],
         summary: 'Get all comments for a post',
+        description: 'Retrieve all comments associated with a specific post',
         responses: {
           '200': {
             description: 'Successfully retrieved comments for the post',
@@ -40,17 +38,17 @@ export const postCommentController = new Elysia({ name: 'post-comment/controller
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/errorDto',
+                  $ref: '#/components/schemas/unauthorizedErrorDto',
                 },
               },
             },
           },
         },
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
       },
-      security: [
-        {
-          bearerAuth: [],
-        },
-      ],
     },
   );

@@ -1,6 +1,6 @@
 import { Elysia } from 'elysia';
 
-import { errorDto } from 'core/dto';
+import { badRequestErrorDto, unauthorizedErrorDto } from 'core/dto';
 
 import { authService } from '../application';
 import { authGuard } from '../core/guards';
@@ -14,7 +14,8 @@ export const authController = new Elysia({ name: 'auth' })
   .model({
     authDto,
     authResponseDto,
-    errorDto,
+    signInInput,
+    signUpInput,
   })
   .get(
     '/me',
@@ -32,7 +33,7 @@ export const authController = new Elysia({ name: 'auth' })
       withUserId: true,
       response: {
         200: authDto,
-        401: errorDto,
+        401: unauthorizedErrorDto,
       },
       detail: {
         tags: ['Auth'],
@@ -53,7 +54,7 @@ export const authController = new Elysia({ name: 'auth' })
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/errorDto',
+                  $ref: '#/components/schemas/unauthorizedErrorDto',
                 },
               },
             },
@@ -70,6 +71,8 @@ export const authController = new Elysia({ name: 'auth' })
   .post(
     '/sign-in',
     async ({ body: { email, password }, status, authService }) => {
+      authService.setUserId(userId);
+
       const auth = await authService.signIn({
         email,
         password,
@@ -85,7 +88,7 @@ export const authController = new Elysia({ name: 'auth' })
       body: signInInput,
       response: {
         200: authResponseDto,
-        401: errorDto,
+        401: unauthorizedErrorDto,
       },
       detail: {
         tags: ['Auth'],
@@ -106,7 +109,7 @@ export const authController = new Elysia({ name: 'auth' })
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/errorDto',
+                  $ref: '#/components/schemas/unauthorizedErrorDto',
                 },
               },
             },
@@ -125,7 +128,7 @@ export const authController = new Elysia({ name: 'auth' })
       });
 
       if (!token) {
-        return status(400, { message: 'User already exists' });
+        return status(400, { message: 'Cannot sign up' });
       }
 
       return status(201, token);
@@ -134,7 +137,7 @@ export const authController = new Elysia({ name: 'auth' })
       body: signUpInput,
       response: {
         201: authResponseDto,
-        400: errorDto,
+        400: badRequestErrorDto,
       },
       detail: {
         tags: ['Auth'],
@@ -155,7 +158,7 @@ export const authController = new Elysia({ name: 'auth' })
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/errorDto',
+                  $ref: '#/components/schemas/badRequestErrorDto',
                 },
               },
             },

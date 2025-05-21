@@ -25,6 +25,38 @@ export const swagger = swaggerPlugin({
       },
     ],
     components: {
+      responses: {
+        '400': {
+          description: 'Bad request',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/badRequestErrorDto',
+              },
+            },
+          },
+        },
+        '401': {
+          description: 'Unauthorized',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/unauthorizedErrorDto',
+              },
+            },
+          },
+        },
+        '404': {
+          description: 'Resource not found',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/notFoundErrorDto',
+              },
+            },
+          },
+        },
+      },
       securitySchemes: {
         bearerAuth: {
           type: 'http',

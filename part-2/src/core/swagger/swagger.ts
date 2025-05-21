@@ -8,12 +8,16 @@ export const swagger = swaggerPlugin({
     },
     tags: [
       {
-        description: 'User management endpoints',
-        name: 'Users',
+        description: 'Comment management endpoints',
+        name: 'Comments',
       },
       {
         description: 'Post management endpoints',
         name: 'Posts',
+      },
+      {
+        description: 'User management endpoints',
+        name: 'Users',
       },
     ],
   },

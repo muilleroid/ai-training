@@ -1,7 +1,7 @@
 import { Elysia } from 'elysia';
 import { getCurrentSpan } from '@elysiajs/opentelemetry';
 
-export const traceIdMiddleware = new Elysia({ name: 'traceId' }).derive(
+export const TraceIdMiddleware = new Elysia({ name: 'traceId' }).derive(
   { as: 'global' },
   function deriveTraceId({ set }) {
     const currentSpan = getCurrentSpan();

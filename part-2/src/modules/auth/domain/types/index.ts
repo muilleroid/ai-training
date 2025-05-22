@@ -1,3 +1,3 @@
-export type * from './auth';
-export type * from './auth-input';
-export type * from './auth-repository';
+export type * from './account';
+export type * from './account-input';
+export type * from './account-repository';

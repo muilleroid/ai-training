@@ -1,20 +1,20 @@
 import { Elysia } from 'elysia';
 
-import { AuthDomain, CryptoDomain, JwtDomain } from '../domain';
+import { AccountDomain, CryptoDomain, JwtDomain } from '../domain';
 
-import type { SignInParams, SignUpParams } from './auth-service.types';
+import type { FindByIdParams, SignInParams, SignUpParams } from './auth-service.types';
 
 export const AuthService = new Elysia({ name: 'auth/service' })
-  .use(AuthDomain)
+  .use(AccountDomain)
   .use(CryptoDomain)
   .use(JwtDomain)
-  .derive({ as: 'global' }, function deriveAuthService({ authDomain, cryptoDomain, jwtDomain }) {
+  .derive({ as: 'global' }, function deriveAuthService({ accountDomain, cryptoDomain, jwtDomain }) {
     const authService = {
-      findById: ({ userId }: { userId: string }) => {
-        return authDomain.findById({ userId });
+      findById: ({ accountId }: FindByIdParams) => {
+        return accountDomain.findById({ accountId });
       },
       signIn: async ({ email, password }: SignInParams) => {
-        const auth = await authDomain.findByEmail({ email });
+        const auth = await accountDomain.findByEmail({ email });
 
         if (!auth) {
           return null;
@@ -39,8 +39,8 @@ export const AuthService = new Elysia({ name: 'auth/service' })
       signUp: async ({ email, name, password }: SignUpParams) => {
         const passwordHash = await cryptoDomain.hash({ password });
 
-        const auth = await authDomain.create({
-          auth: {
+        const auth = await accountDomain.create({
+          account: {
             email,
             name,
             passwordHash,

@@ -1,6 +1,6 @@
 import { t } from 'elysia';
 
-export const AuthDto = t.Object(
+export const AccountDto = t.Object(
   {
     email: t.String({
       description: 'User email address',
@@ -17,7 +17,7 @@ export const AuthDto = t.Object(
     }),
   },
   {
-    description: 'Basic user authentication information',
-    title: 'Auth DTO',
+    description: 'Basic user information',
+    title: 'Account DTO',
   },
 );

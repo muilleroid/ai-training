@@ -1,11 +1,11 @@
-import type { AuthInput } from './types';
+import type { AccountInput } from './types';
 
 export type CreateParams = {
-  auth: AuthInput;
+  account: AccountInput;
 };
 
 export type FindByIdParams = {
-  userId: string;
+  accountId: string;
 };
 
 export type FindByEmailParams = {

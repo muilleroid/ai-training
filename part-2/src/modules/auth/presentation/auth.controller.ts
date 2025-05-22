@@ -4,22 +4,22 @@ import { BadRequestErrorDto, UnauthorizedErrorDto } from 'core/presentation/dto'
 
 import { AuthGuard, AuthService } from '../application';
 
-import { AuthDto, AuthResponseDto } from './dto';
+import { AccountDto, AccountResponseDto } from './dto';
 import { SignInInput, SignUpInput } from './input';
 
 export const AuthController = new Elysia({ name: 'auth' })
   .use(AuthGuard)
   .use(AuthService)
   .model({
-    AuthDto,
-    AuthResponseDto,
+    AccountDto,
+    AccountResponseDto,
     SignInInput,
     SignUpInput,
   })
   .get(
     '/me',
-    async ({ authService, status, userId }) => {
-      const auth = await authService.findById({ userId });
+    async ({ accountId, authService, status }) => {
+      const auth = await authService.findById({ accountId });
 
       if (!auth) {
         return status(401, { message: 'Unauthorized' });
@@ -35,7 +35,7 @@ export const AuthController = new Elysia({ name: 'auth' })
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/AuthDto',
+                  $ref: '#/components/schemas/AccountDto',
                 },
               },
             },
@@ -61,10 +61,9 @@ export const AuthController = new Elysia({ name: 'auth' })
         tags: ['Auth'],
       },
       response: {
-        200: AuthDto,
+        200: AccountDto,
         401: UnauthorizedErrorDto,
       },
-      withUserId: true,
     },
   )
   .post(
@@ -89,7 +88,7 @@ export const AuthController = new Elysia({ name: 'auth' })
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/AuthResponseDto',
+                  $ref: '#/components/schemas/AccountResponseDto',
                 },
               },
             },
@@ -110,7 +109,7 @@ export const AuthController = new Elysia({ name: 'auth' })
         tags: ['Auth'],
       },
       response: {
-        200: AuthResponseDto,
+        200: AccountResponseDto,
         401: UnauthorizedErrorDto,
       },
     },
@@ -138,7 +137,7 @@ export const AuthController = new Elysia({ name: 'auth' })
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/AuthResponseDto',
+                  $ref: '#/components/schemas/AccountResponseDto',
                 },
               },
             },
@@ -159,7 +158,7 @@ export const AuthController = new Elysia({ name: 'auth' })
         tags: ['Auth'],
       },
       response: {
-        201: AuthResponseDto,
+        201: AccountResponseDto,
         400: BadRequestErrorDto,
       },
     },

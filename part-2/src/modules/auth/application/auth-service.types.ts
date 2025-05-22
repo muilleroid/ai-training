@@ -1,5 +1,5 @@
 export type FindByIdParams = {
-  userId: string;
+  accountId: string;
 };
 
 export type SignInParams = {

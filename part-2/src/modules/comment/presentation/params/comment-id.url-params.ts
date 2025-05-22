@@ -1,6 +1,6 @@
 import { t } from 'elysia';
 
-export const commentIdParams = t.Object(
+export const CommentIdUrlParams = t.Object(
   {
     commentId: t.String({
       description: 'The unique identifier of the comment',
@@ -9,8 +9,6 @@ export const commentIdParams = t.Object(
   },
   {
     description: 'Parameters for operations that require a comment ID',
-    title: 'Comment ID Parameters',
+    title: 'Comment ID URL Parameters',
   },
 );
-
-export type CommentIdParams = typeof commentIdParams.static;

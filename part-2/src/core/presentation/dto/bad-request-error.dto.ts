@@ -1,6 +1,6 @@
 import { t } from 'elysia';
 
-export const badRequestErrorDto = t.Object(
+export const BadRequestErrorDto = t.Object(
   {
     message: t.String({
       description: 'Error message explaining request issues',

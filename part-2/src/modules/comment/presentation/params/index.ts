@@ -1,2 +1,2 @@
-export * from './comment-id.params';
-export * from './find.query-params';
+export * from './comment-id.url-params';
+export * from './find-comments.query-params';

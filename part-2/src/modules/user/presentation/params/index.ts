@@ -1,1 +1,1 @@
-export * from './user-id.params';
+export * from './user-id.url-params';

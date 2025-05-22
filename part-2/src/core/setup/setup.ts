@@ -1,9 +1,9 @@
 import Elysia from 'elysia';
 
-import { connection } from 'core/database';
-import { jwt } from 'core/jwt';
-import { logger } from 'core/logger';
-import { traceIdMiddleware } from 'core/middlewares';
+import { traceIdMiddleware } from 'core/application/trace-id';
+import { connection } from 'core/infrastructure/database';
+import { jwt } from 'core/infrastructure/jwt';
+import { logger } from 'core/infrastructure/logger';
 
 export const setup = new Elysia({ name: 'setup' })
   .use(jwt)

@@ -1,13 +1,11 @@
 import { t } from 'elysia';
 
-import { commentDto } from './comment.dto';
+import { CommentDto } from './comment.dto';
 
-export const commentsDto = t.Array(commentDto, {
+export const CommentsDto = t.Array(CommentDto, {
   description: 'Array of comments',
   items: {
     description: 'A comment object',
   },
   title: 'Comments DTO',
 });
-
-export type CommentsDto = typeof commentsDto.static;

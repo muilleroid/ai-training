@@ -1,6 +1,6 @@
 import { t } from 'elysia';
 
-export const commentDto = t.Object(
+export const CommentDto = t.Object(
   {
     body: t.String({
       description: 'The content of the comment',
@@ -24,5 +24,3 @@ export const commentDto = t.Object(
     title: 'Comment DTO',
   },
 );
-
-export type CommentDto = typeof commentDto.static;

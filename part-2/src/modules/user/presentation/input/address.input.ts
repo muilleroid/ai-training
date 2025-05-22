@@ -1,15 +1,15 @@
 import { t } from 'elysia';
 
-import { geoInput } from './geo.input';
+import { GeoInput } from './geo.input';
 
-export const addressInput = t.Object(
+export const AddressInput = t.Object(
   {
     city: t.String({
       description: 'City name',
       example: 'Gwenborough',
       minLength: 1,
     }),
-    geo: geoInput,
+    geo: GeoInput,
     street: t.String({
       description: 'Street name and number',
       example: 'Kulas Light',
@@ -31,5 +31,3 @@ export const addressInput = t.Object(
     title: 'Address Input',
   },
 );
-
-export type AddressInput = typeof addressInput.static;

@@ -1,6 +1,6 @@
 import { t } from 'elysia';
 
-export const companyDto = t.Object(
+export const CompanyDto = t.Object(
   {
     bs: t.String({
       description: 'Business strategy or slogan',
@@ -23,5 +23,3 @@ export const companyDto = t.Object(
     title: 'Company DTO',
   },
 );
-
-export type CompanyDto = typeof companyDto.static;

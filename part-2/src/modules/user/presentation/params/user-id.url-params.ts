@@ -1,6 +1,6 @@
 import { t } from 'elysia';
 
-export const userIdParams = t.Object(
+export const UserIdUrlParams = t.Object(
   {
     userId: t.String({
       description: 'The unique identifier of the user',
@@ -9,8 +9,6 @@ export const userIdParams = t.Object(
   },
   {
     description: 'Parameters for identifying a specific user',
-    title: 'User ID Parameters',
+    title: 'User ID URL Parameters',
   },
 );
-
-export type UserIdParams = typeof userIdParams.static;

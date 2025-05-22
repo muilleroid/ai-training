@@ -1,13 +1,11 @@
 import { t } from 'elysia';
 
-import { userDto } from './user.dto';
+import { UserDto } from './user.dto';
 
-export const usersDto = t.Array(userDto, {
+export const UsersDto = t.Array(UserDto, {
   description: 'Array of user data transfer objects for listing multiple users',
   items: {
     description: 'A user object',
   },
   title: 'Users DTO',
 });
-
-export type UsersDto = typeof usersDto.static;

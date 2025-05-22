@@ -1,24 +1,24 @@
 import { Elysia } from 'elysia';
 
-import { badRequestErrorDto, notFoundErrorDto } from 'core/dto';
-import { AuthGuard } from 'modules/auth/core/guards';
+import { BadRequestErrorDto, NotFoundErrorDto } from 'core/presentation/dto';
+import { AuthGuard } from 'modules/auth/application';
 
 import { CommentService } from '../application';
 
-import { commentDto, commentsDto } from './dto';
-import { commentInput, partialCommentInput } from './input';
-import { commentIdParams, findQueryParams } from './params';
+import { CommentDto, CommentsDto } from './dto';
+import { CommentInput, PartialCommentInput } from './input';
+import { CommentIdUrlParams, FindCommentsQueryParams } from './params';
 
 export const CommentController = new Elysia({ name: 'comment/controller', prefix: '/comments' })
   .use(AuthGuard)
   .use(CommentService)
   .model({
-    commentDto,
-    commentIdParams,
-    commentInput,
-    commentsDto,
-    findQueryParams,
-    partialCommentInput,
+    CommentDto,
+    CommentIdUrlParams,
+    CommentInput,
+    CommentsDto,
+    FindCommentsQueryParams,
+    PartialCommentInput,
   })
   .get(
     '/',
@@ -37,7 +37,7 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/commentsDto',
+                  $ref: '#/components/schemas/CommentsDto',
                 },
               },
             },
@@ -47,7 +47,7 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/unauthorizedErrorDto',
+                  $ref: '#/components/schemas/UnauthorizedErrorDto',
                 },
               },
             },
@@ -62,8 +62,8 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
         summary: 'Get all comments',
         tags: ['Comments'],
       },
-      query: findQueryParams,
-      response: commentsDto,
+      query: FindCommentsQueryParams,
+      response: CommentsDto,
     },
   )
   .get(
@@ -86,7 +86,7 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/commentDto',
+                  $ref: '#/components/schemas/CommentDto',
                 },
               },
             },
@@ -96,7 +96,7 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/unauthorizedErrorDto',
+                  $ref: '#/components/schemas/UnauthorizedErrorDto',
                 },
               },
             },
@@ -106,7 +106,7 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/notFoundErrorDto',
+                  $ref: '#/components/schemas/NotFoundErrorDto',
                 },
               },
             },
@@ -121,10 +121,10 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
         summary: 'Get comment by ID',
         tags: ['Comments'],
       },
-      params: commentIdParams,
+      params: CommentIdUrlParams,
       response: {
-        200: commentDto,
-        404: notFoundErrorDto,
+        200: CommentDto,
+        404: NotFoundErrorDto,
       },
     },
   )
@@ -141,7 +141,7 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
     },
     {
       authenticated: true,
-      body: commentInput,
+      body: CommentInput,
       detail: {
         description: 'Create a new comment for a post',
         responses: {
@@ -149,7 +149,7 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/commentDto',
+                  $ref: '#/components/schemas/CommentDto',
                 },
               },
             },
@@ -159,7 +159,7 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/badRequestErrorDto',
+                  $ref: '#/components/schemas/BadRequestErrorDto',
                 },
               },
             },
@@ -169,7 +169,7 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/unauthorizedErrorDto',
+                  $ref: '#/components/schemas/UnauthorizedErrorDto',
                 },
               },
             },
@@ -185,8 +185,8 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
         tags: ['Comments'],
       },
       response: {
-        201: commentDto,
-        400: badRequestErrorDto,
+        201: CommentDto,
+        400: BadRequestErrorDto,
       },
     },
   )
@@ -206,7 +206,7 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
     },
     {
       authenticated: true,
-      body: commentInput,
+      body: CommentInput,
       detail: {
         description: 'Update all fields of an existing comment',
         responses: {
@@ -214,7 +214,7 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/commentDto',
+                  $ref: '#/components/schemas/CommentDto',
                 },
               },
             },
@@ -224,7 +224,7 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/unauthorizedErrorDto',
+                  $ref: '#/components/schemas/UnauthorizedErrorDto',
                 },
               },
             },
@@ -234,7 +234,7 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/notFoundErrorDto',
+                  $ref: '#/components/schemas/NotFoundErrorDto',
                 },
               },
             },
@@ -249,10 +249,10 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
         summary: 'Update comment',
         tags: ['Comments'],
       },
-      params: commentIdParams,
+      params: CommentIdUrlParams,
       response: {
-        200: commentDto,
-        404: notFoundErrorDto,
+        200: CommentDto,
+        404: NotFoundErrorDto,
       },
     },
   )
@@ -272,7 +272,7 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
     },
     {
       authenticated: true,
-      body: partialCommentInput,
+      body: PartialCommentInput,
       detail: {
         description: 'Update specific fields of an existing comment',
         responses: {
@@ -280,7 +280,7 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/commentDto',
+                  $ref: '#/components/schemas/CommentDto',
                 },
               },
             },
@@ -290,7 +290,7 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/unauthorizedErrorDto',
+                  $ref: '#/components/schemas/UnauthorizedErrorDto',
                 },
               },
             },
@@ -300,7 +300,7 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/notFoundErrorDto',
+                  $ref: '#/components/schemas/NotFoundErrorDto',
                 },
               },
             },
@@ -315,10 +315,10 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
         summary: 'Partially update comment',
         tags: ['Comments'],
       },
-      params: commentIdParams,
+      params: CommentIdUrlParams,
       response: {
-        200: commentDto,
-        404: notFoundErrorDto,
+        200: CommentDto,
+        404: NotFoundErrorDto,
       },
     },
   )
@@ -342,7 +342,7 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/commentDto',
+                  $ref: '#/components/schemas/CommentDto',
                 },
               },
             },
@@ -352,7 +352,7 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/unauthorizedErrorDto',
+                  $ref: '#/components/schemas/UnauthorizedErrorDto',
                 },
               },
             },
@@ -362,7 +362,7 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/notFoundErrorDto',
+                  $ref: '#/components/schemas/NotFoundErrorDto',
                 },
               },
             },
@@ -377,10 +377,10 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
         summary: 'Delete comment',
         tags: ['Comments'],
       },
-      params: commentIdParams,
+      params: CommentIdUrlParams,
       response: {
-        200: commentDto,
-        404: notFoundErrorDto,
+        200: CommentDto,
+        404: NotFoundErrorDto,
       },
     },
   );

@@ -1,6 +1,6 @@
 import { t } from 'elysia';
 
-export const postDto = t.Object(
+export const PostDto = t.Object(
   {
     body: t.String({
       description: 'The content of the post',
@@ -24,5 +24,3 @@ export const postDto = t.Object(
     title: 'Post DTO',
   },
 );
-
-export type PostDto = typeof postDto.static;

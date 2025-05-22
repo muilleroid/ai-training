@@ -1,6 +1,6 @@
 import { t } from 'elysia';
 
-export const findQueryParams = t.Object(
+export const FindCommentsQueryParams = t.Object(
   {
     postId: t.Optional(
       t.String({

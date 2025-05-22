@@ -1,6 +1,6 @@
 import { t } from 'elysia';
 
-export const unauthorizedErrorDto = t.Object(
+export const UnauthorizedErrorDto = t.Object(
   {
     message: t.String({
       description: 'Detailed error message explaining the authentication failure',

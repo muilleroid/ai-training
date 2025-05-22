@@ -1,8 +1,8 @@
 import { Elysia } from 'elysia';
 
-import { AuthGuard } from 'modules/auth/core/guards';
-import { commentsDto } from 'modules/comment/presentation/dto';
-import { postIdParams } from 'modules/post/presentation/params';
+import { AuthGuard } from 'modules/auth/application';
+import { CommentsDto } from 'modules/comment/presentation/dto';
+import { PostIdUrlParams } from 'modules/post/presentation/params';
 
 import { PostCommentService } from '../application/post-comment.service';
 
@@ -23,7 +23,7 @@ export const PostCommentController = new Elysia({ name: 'post-comment/controller
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/commentsDto',
+                  $ref: '#/components/schemas/CommentsDto',
                 },
               },
             },
@@ -33,7 +33,7 @@ export const PostCommentController = new Elysia({ name: 'post-comment/controller
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/unauthorizedErrorDto',
+                  $ref: '#/components/schemas/UnauthorizedErrorDto',
                 },
               },
             },
@@ -48,7 +48,7 @@ export const PostCommentController = new Elysia({ name: 'post-comment/controller
         summary: 'Get all comments for a post',
         tags: ['Posts', 'Comments'],
       },
-      params: postIdParams,
-      response: commentsDto,
+      params: PostIdUrlParams,
+      response: CommentsDto,
     },
   );

@@ -1,10 +1,8 @@
 import { t } from 'elysia';
 
-import { companyInput } from './company.input';
+import { CompanyInput } from './company.input';
 
-export const partialCompanyInput = t.Partial(companyInput, {
+export const PartialCompanyInput = t.Partial(CompanyInput, {
   description: 'Partial input data for updating company information. All fields are optional.',
   title: 'Partial Company Input',
 });
-
-export type PartialCompanyInput = typeof partialCompanyInput.static;

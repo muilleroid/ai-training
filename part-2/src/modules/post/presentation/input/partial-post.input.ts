@@ -1,10 +1,8 @@
 import { t } from 'elysia';
 
-import { postInput } from './post.input';
+import { PostInput } from './post.input';
 
-export const partialPostInput = t.Partial(postInput, {
+export const PartialPostInput = t.Partial(PostInput, {
   description: 'Input data for updating an existing post. All fields are optional.',
   title: 'Partial Post Input',
 });
-
-export type PartialPostInput = typeof partialPostInput.static;

@@ -1,10 +1,8 @@
 import { t } from 'elysia';
 
-import { geoInput } from './geo.input';
+import { GeoInput } from './geo.input';
 
-export const partialGeoInput = t.Partial(geoInput, {
+export const PartialGeoInput = t.Partial(GeoInput, {
   description: 'Partial input data for updating geographical coordinates. All fields are optional.',
   title: 'Partial Geo Input',
 });
-
-export type PartialGeoInput = typeof partialGeoInput.static;

@@ -1,7 +1,7 @@
 import { Elysia } from 'elysia';
 
 import { config } from 'config';
-import { swagger } from 'core/swagger';
+import { swagger } from 'core/application/swagger';
 import { setup } from 'core/setup';
 
 import { instrumentation } from './instrumentation';

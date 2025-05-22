@@ -1,6 +1,6 @@
 import { t } from 'elysia';
 
-export const notFoundErrorDto = t.Object(
+export const NotFoundErrorDto = t.Object(
   {
     message: t.String({
       description: 'Detailed error message indicating which resource could not be found',

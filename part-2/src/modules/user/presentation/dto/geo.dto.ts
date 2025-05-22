@@ -1,6 +1,6 @@
 import { t } from 'elysia';
 
-export const geoDto = t.Object(
+export const GeoDto = t.Object(
   {
     lat: t.String({
       description: 'Geographical latitude coordinate',
@@ -18,5 +18,3 @@ export const geoDto = t.Object(
     title: 'Geo DTO',
   },
 );
-
-export type GeoDto = typeof geoDto.static;

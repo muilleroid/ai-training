@@ -1,26 +1,26 @@
 import { Elysia } from 'elysia';
 
-import { badRequestErrorDto, notFoundErrorDto } from 'core/dto';
-import { AuthGuard } from 'modules/auth/core/guards';
+import { BadRequestErrorDto, NotFoundErrorDto } from 'core/presentation/dto';
+import { AuthGuard } from 'modules/auth/application';
 
 import { UserService } from '../application';
 
-import { addressDto, companyDto, geoDto, userDto, usersDto } from './dto';
-import { userIdParams } from './params';
-import { partialUserInput, userInput } from './input';
+import { AddressDto, CompanyDto, GeoDto, UserDto, UsersDto } from './dto';
+import { UserIdUrlParams } from './params';
+import { PartialUserInput, UserInput } from './input';
 
 export const UserController = new Elysia({ name: 'user/controller', prefix: '/users' })
   .use(AuthGuard)
   .use(UserService)
   .model({
-    addressDto,
-    companyDto,
-    geoDto,
-    partialUserInput,
-    userDto,
-    userIdParams,
-    userInput,
-    usersDto,
+    AddressDto,
+    CompanyDto,
+    GeoDto,
+    PartialUserInput,
+    UserDto,
+    UserIdUrlParams,
+    UserInput,
+    UsersDto,
   })
   .get(
     '/',
@@ -36,7 +36,7 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/usersDto',
+                  $ref: '#/components/schemas/UsersDto',
                 },
               },
             },
@@ -46,7 +46,7 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/unauthorizedErrorDto',
+                  $ref: '#/components/schemas/UnauthorizedErrorDto',
                 },
               },
             },
@@ -61,7 +61,7 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
         summary: 'Get all users',
         tags: ['Users'],
       },
-      response: usersDto,
+      response: UsersDto,
     },
   )
   .get(
@@ -84,7 +84,7 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/userDto',
+                  $ref: '#/components/schemas/UserDto',
                 },
               },
             },
@@ -94,7 +94,7 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/unauthorizedErrorDto',
+                  $ref: '#/components/schemas/UnauthorizedErrorDto',
                 },
               },
             },
@@ -104,7 +104,7 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/notFoundErrorDto',
+                  $ref: '#/components/schemas/NotFoundErrorDto',
                 },
               },
             },
@@ -119,10 +119,10 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
         summary: 'Get user by ID',
         tags: ['Users'],
       },
-      params: userIdParams,
+      params: UserIdUrlParams,
       response: {
-        200: userDto,
-        404: notFoundErrorDto,
+        200: UserDto,
+        404: NotFoundErrorDto,
       },
     },
   )
@@ -139,7 +139,7 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
     },
     {
       authenticated: true,
-      body: userInput,
+      body: UserInput,
       detail: {
         description: 'Create a new user with complete profile information including address and company details',
         responses: {
@@ -147,7 +147,7 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/userDto',
+                  $ref: '#/components/schemas/UserDto',
                 },
               },
             },
@@ -157,7 +157,7 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/badRequestErrorDto',
+                  $ref: '#/components/schemas/BadRequestErrorDto',
                 },
               },
             },
@@ -167,7 +167,7 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/unauthorizedErrorDto',
+                  $ref: '#/components/schemas/UnauthorizedErrorDto',
                 },
               },
             },
@@ -183,8 +183,8 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
         tags: ['Users'],
       },
       response: {
-        201: userDto,
-        400: badRequestErrorDto,
+        201: UserDto,
+        400: BadRequestErrorDto,
       },
     },
   )
@@ -204,7 +204,7 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
     },
     {
       authenticated: true,
-      body: userInput,
+      body: UserInput,
       detail: {
         description: 'Update all fields of an existing user, requiring all user data to be provided',
         responses: {
@@ -212,7 +212,7 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/userDto',
+                  $ref: '#/components/schemas/UserDto',
                 },
               },
             },
@@ -222,7 +222,7 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/unauthorizedErrorDto',
+                  $ref: '#/components/schemas/UnauthorizedErrorDto',
                 },
               },
             },
@@ -232,7 +232,7 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/notFoundErrorDto',
+                  $ref: '#/components/schemas/NotFoundErrorDto',
                 },
               },
             },
@@ -247,10 +247,10 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
         summary: 'Update user',
         tags: ['Users'],
       },
-      params: userIdParams,
+      params: UserIdUrlParams,
       response: {
-        200: userDto,
-        404: notFoundErrorDto,
+        200: UserDto,
+        404: NotFoundErrorDto,
       },
     },
   )
@@ -270,7 +270,7 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
     },
     {
       authenticated: true,
-      body: partialUserInput,
+      body: PartialUserInput,
       detail: {
         description: 'Update specific fields of an existing user, allowing partial updates of any user data.',
         responses: {
@@ -278,7 +278,7 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/userDto',
+                  $ref: '#/components/schemas/UserDto',
                 },
               },
             },
@@ -288,7 +288,7 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/unauthorizedErrorDto',
+                  $ref: '#/components/schemas/UnauthorizedErrorDto',
                 },
               },
             },
@@ -298,7 +298,7 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/notFoundErrorDto',
+                  $ref: '#/components/schemas/NotFoundErrorDto',
                 },
               },
             },
@@ -313,10 +313,10 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
         summary: 'Partially update user',
         tags: ['Users'],
       },
-      params: userIdParams,
+      params: UserIdUrlParams,
       response: {
-        200: userDto,
-        404: notFoundErrorDto,
+        200: UserDto,
+        404: NotFoundErrorDto,
       },
     },
   )
@@ -340,7 +340,7 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/userDto',
+                  $ref: '#/components/schemas/UserDto',
                 },
               },
             },
@@ -350,7 +350,7 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/unauthorizedErrorDto',
+                  $ref: '#/components/schemas/UnauthorizedErrorDto',
                 },
               },
             },
@@ -360,7 +360,7 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/notFoundErrorDto',
+                  $ref: '#/components/schemas/NotFoundErrorDto',
                 },
               },
             },
@@ -375,10 +375,10 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
         summary: 'Delete user',
         tags: ['Users'],
       },
-      params: userIdParams,
+      params: UserIdUrlParams,
       response: {
-        200: userDto,
-        404: notFoundErrorDto,
+        200: UserDto,
+        404: NotFoundErrorDto,
       },
     },
   );

@@ -1,12 +1,12 @@
 import { t } from 'elysia';
 
-import { addressDto } from './address.dto';
-import { companyDto } from './company.dto';
+import { AddressDto } from './address.dto';
+import { CompanyDto } from './company.dto';
 
-export const userDto = t.Object(
+export const UserDto = t.Object(
   {
-    address: t.Optional(t.Nullable(addressDto)),
-    company: t.Optional(t.Nullable(companyDto)),
+    address: t.Optional(t.Nullable(AddressDto)),
+    company: t.Optional(t.Nullable(CompanyDto)),
     email: t.String({
       description: 'User email address',
       example: 'john.doe@example.com',
@@ -43,5 +43,3 @@ export const userDto = t.Object(
     title: 'User DTO',
   },
 );
-
-export type UserDto = typeof userDto.static;

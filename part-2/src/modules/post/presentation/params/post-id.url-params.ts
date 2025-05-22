@@ -1,6 +1,6 @@
 import { t } from 'elysia';
 
-export const postIdParams = t.Object(
+export const PostIdUrlParams = t.Object(
   {
     postId: t.String({
       description: 'The unique identifier of the post',
@@ -9,6 +9,6 @@ export const postIdParams = t.Object(
   },
   {
     description: 'Parameters for operations that require a post ID',
-    title: 'Post ID Parameters',
+    title: 'Post ID URL Parameters',
   },
 );

@@ -1,13 +1,13 @@
 import { t } from 'elysia';
 
-import { addressInput } from './address.input';
-import { partialGeoInput } from './partial-geo.input';
+import { AddressInput } from './address.input';
+import { PartialGeoInput } from './partial-geo.input';
 
-export const partialAddressInput = t.Composite(
+export const PartialAddressInput = t.Composite(
   [
-    t.Partial(t.Omit(addressInput, ['geo'])),
+    t.Partial(t.Omit(AddressInput, ['geo'])),
     t.Object({
-      geo: t.Optional(partialGeoInput),
+      geo: t.Optional(PartialGeoInput),
     }),
   ],
   {
@@ -16,5 +16,3 @@ export const partialAddressInput = t.Composite(
     title: 'Partial Address Input',
   },
 );
-
-export type PartialAddressInput = typeof partialAddressInput.static;

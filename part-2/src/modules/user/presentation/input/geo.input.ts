@@ -1,6 +1,6 @@
 import { t } from 'elysia';
 
-export const geoInput = t.Object(
+export const GeoInput = t.Object(
   {
     lat: t.String({
       description: 'Geographical latitude coordinate',
@@ -18,5 +18,3 @@ export const geoInput = t.Object(
     title: 'Geo Input',
   },
 );
-
-export type GeoInput = typeof geoInput.static;

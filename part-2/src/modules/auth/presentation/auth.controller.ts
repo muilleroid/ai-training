@@ -1,21 +1,20 @@
 import { Elysia } from 'elysia';
 
-import { badRequestErrorDto, unauthorizedErrorDto } from 'core/dto';
+import { BadRequestErrorDto, UnauthorizedErrorDto } from 'core/presentation/dto';
 
-import { AuthService } from '../application';
-import { AuthGuard } from '../core/guards';
+import { AuthGuard, AuthService } from '../application';
 
-import { authDto, authResponseDto } from './dto';
-import { signInInput, signUpInput } from './input';
+import { AuthDto, AuthResponseDto } from './dto';
+import { SignInInput, SignUpInput } from './input';
 
 export const AuthController = new Elysia({ name: 'auth' })
   .use(AuthGuard)
   .use(AuthService)
   .model({
-    authDto,
-    authResponseDto,
-    signInInput,
-    signUpInput,
+    AuthDto,
+    AuthResponseDto,
+    SignInInput,
+    SignUpInput,
   })
   .get(
     '/me',
@@ -36,7 +35,7 @@ export const AuthController = new Elysia({ name: 'auth' })
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/authDto',
+                  $ref: '#/components/schemas/AuthDto',
                 },
               },
             },
@@ -46,7 +45,7 @@ export const AuthController = new Elysia({ name: 'auth' })
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/unauthorizedErrorDto',
+                  $ref: '#/components/schemas/UnauthorizedErrorDto',
                 },
               },
             },
@@ -62,8 +61,8 @@ export const AuthController = new Elysia({ name: 'auth' })
         tags: ['Auth'],
       },
       response: {
-        200: authDto,
-        401: unauthorizedErrorDto,
+        200: AuthDto,
+        401: UnauthorizedErrorDto,
       },
       withUserId: true,
     },
@@ -83,14 +82,14 @@ export const AuthController = new Elysia({ name: 'auth' })
       return auth;
     },
     {
-      body: signInInput,
+      body: SignInInput,
       detail: {
         responses: {
           '200': {
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/authResponseDto',
+                  $ref: '#/components/schemas/AuthResponseDto',
                 },
               },
             },
@@ -100,7 +99,7 @@ export const AuthController = new Elysia({ name: 'auth' })
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/unauthorizedErrorDto',
+                  $ref: '#/components/schemas/UnauthorizedErrorDto',
                 },
               },
             },
@@ -111,8 +110,8 @@ export const AuthController = new Elysia({ name: 'auth' })
         tags: ['Auth'],
       },
       response: {
-        200: authResponseDto,
-        401: unauthorizedErrorDto,
+        200: AuthResponseDto,
+        401: UnauthorizedErrorDto,
       },
     },
   )
@@ -132,14 +131,14 @@ export const AuthController = new Elysia({ name: 'auth' })
       return status(201, token);
     },
     {
-      body: signUpInput,
+      body: SignUpInput,
       detail: {
         responses: {
           '201': {
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/authResponseDto',
+                  $ref: '#/components/schemas/AuthResponseDto',
                 },
               },
             },
@@ -149,7 +148,7 @@ export const AuthController = new Elysia({ name: 'auth' })
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/badRequestErrorDto',
+                  $ref: '#/components/schemas/BadRequestErrorDto',
                 },
               },
             },
@@ -160,8 +159,8 @@ export const AuthController = new Elysia({ name: 'auth' })
         tags: ['Auth'],
       },
       response: {
-        201: authResponseDto,
-        400: badRequestErrorDto,
+        201: AuthResponseDto,
+        400: BadRequestErrorDto,
       },
     },
   );

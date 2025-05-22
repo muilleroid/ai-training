@@ -1,20 +1,24 @@
 import { Elysia } from 'elysia';
 
-import { badRequestErrorDto, notFoundErrorDto } from 'core/dto';
-import { AuthGuard } from 'modules/auth/core/guards';
+import { BadRequestErrorDto, NotFoundErrorDto } from 'core/presentation/dto';
+import { AuthGuard } from 'modules/auth/application';
 
 import { PostService } from '../application';
 
-import { postDto, postsDto } from './dto';
-import { partialPostInput, postInput } from './input';
-import { findQueryParams, postIdParams } from './params';
+import { PostDto, PostsDto } from './dto';
+import { PartialPostInput, PostInput } from './input';
+import { FindPostsQueryParams, PostIdUrlParams } from './params';
 
 export const PostController = new Elysia({ name: 'post/controller', prefix: '/posts' })
   .use(AuthGuard)
   .use(PostService)
   .model({
-    postDto,
-    postsDto,
+    FindPostsQueryParams,
+    PartialPostInput,
+    PostDto,
+    PostIdUrlParams,
+    PostInput,
+    PostsDto,
   })
   .get(
     '/',
@@ -30,7 +34,7 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/postsDto',
+                  $ref: '#/components/schemas/PostsDto',
                 },
               },
             },
@@ -40,7 +44,7 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/unauthorizedErrorDto',
+                  $ref: '#/components/schemas/UnauthorizedErrorDto',
                 },
               },
             },
@@ -55,8 +59,8 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
         summary: 'Get all posts',
         tags: ['Posts'],
       },
-      query: findQueryParams,
-      response: postsDto,
+      query: FindPostsQueryParams,
+      response: PostsDto,
     },
   )
   .get(
@@ -79,7 +83,7 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/postDto',
+                  $ref: '#/components/schemas/PostDto',
                 },
               },
             },
@@ -89,7 +93,7 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/unauthorizedErrorDto',
+                  $ref: '#/components/schemas/UnauthorizedErrorDto',
                 },
               },
             },
@@ -99,7 +103,7 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/notFoundErrorDto',
+                  $ref: '#/components/schemas/NotFoundErrorDto',
                 },
               },
             },
@@ -114,10 +118,10 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
         summary: 'Get post by ID',
         tags: ['Posts'],
       },
-      params: postIdParams,
+      params: PostIdUrlParams,
       response: {
-        200: postDto,
-        404: notFoundErrorDto,
+        200: PostDto,
+        404: NotFoundErrorDto,
       },
     },
   )
@@ -134,7 +138,7 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
     },
     {
       authenticated: true,
-      body: postInput,
+      body: PostInput,
       detail: {
         description: 'Create a new post with the provided data',
         responses: {
@@ -142,7 +146,7 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/postDto',
+                  $ref: '#/components/schemas/PostDto',
                 },
               },
             },
@@ -152,7 +156,7 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/badRequestErrorDto',
+                  $ref: '#/components/schemas/BadRequestErrorDto',
                 },
               },
             },
@@ -162,7 +166,7 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/unauthorizedErrorDto',
+                  $ref: '#/components/schemas/UnauthorizedErrorDto',
                 },
               },
             },
@@ -178,8 +182,8 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
         tags: ['Posts'],
       },
       response: {
-        201: postDto,
-        400: badRequestErrorDto,
+        201: PostDto,
+        400: BadRequestErrorDto,
       },
     },
   )
@@ -199,7 +203,7 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
     },
     {
       authenticated: true,
-      body: postInput,
+      body: PostInput,
       detail: {
         description: 'Update all fields of an existing post',
         responses: {
@@ -207,7 +211,7 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/postDto',
+                  $ref: '#/components/schemas/PostDto',
                 },
               },
             },
@@ -217,7 +221,7 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/unauthorizedErrorDto',
+                  $ref: '#/components/schemas/UnauthorizedErrorDto',
                 },
               },
             },
@@ -227,7 +231,7 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/notFoundErrorDto',
+                  $ref: '#/components/schemas/NotFoundErrorDto',
                 },
               },
             },
@@ -242,10 +246,10 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
         summary: 'Update post',
         tags: ['Posts'],
       },
-      params: postIdParams,
+      params: PostIdUrlParams,
       response: {
-        200: postDto,
-        404: notFoundErrorDto,
+        200: PostDto,
+        404: NotFoundErrorDto,
       },
     },
   )
@@ -265,7 +269,7 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
     },
     {
       authenticated: true,
-      body: partialPostInput,
+      body: PartialPostInput,
       detail: {
         description: 'Update specific fields of an existing post',
         responses: {
@@ -273,7 +277,7 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/postDto',
+                  $ref: '#/components/schemas/PostDto',
                 },
               },
             },
@@ -283,7 +287,7 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/unauthorizedErrorDto',
+                  $ref: '#/components/schemas/UnauthorizedErrorDto',
                 },
               },
             },
@@ -293,7 +297,7 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/notFoundErrorDto',
+                  $ref: '#/components/schemas/NotFoundErrorDto',
                 },
               },
             },
@@ -308,10 +312,10 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
         summary: 'Partially update post',
         tags: ['Posts'],
       },
-      params: postIdParams,
+      params: PostIdUrlParams,
       response: {
-        200: postDto,
-        404: notFoundErrorDto,
+        200: PostDto,
+        404: NotFoundErrorDto,
       },
     },
   )
@@ -335,7 +339,7 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/postDto',
+                  $ref: '#/components/schemas/PostDto',
                 },
               },
             },
@@ -345,7 +349,7 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/unauthorizedErrorDto',
+                  $ref: '#/components/schemas/UnauthorizedErrorDto',
                 },
               },
             },
@@ -355,7 +359,7 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/notFoundErrorDto',
+                  $ref: '#/components/schemas/NotFoundErrorDto',
                 },
               },
             },
@@ -370,10 +374,10 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
         summary: 'Delete post',
         tags: ['Posts'],
       },
-      params: postIdParams,
+      params: PostIdUrlParams,
       response: {
-        200: postDto,
-        404: notFoundErrorDto,
+        200: PostDto,
+        404: NotFoundErrorDto,
       },
     },
   );

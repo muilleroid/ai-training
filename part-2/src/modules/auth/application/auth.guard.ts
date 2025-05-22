@@ -1,7 +1,7 @@
 import Bearer from '@elysiajs/bearer';
 import { Elysia } from 'elysia';
 
-import { JwtDomain } from '../../domain';
+import { JwtDomain } from '../domain';
 
 export const AuthGuard = new Elysia({ name: 'auth/guard' })
   .use(Bearer())

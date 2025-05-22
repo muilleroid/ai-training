@@ -1,15 +1,15 @@
 import { t } from 'elysia';
 
-import { partialAddressInput } from './partial-address.input';
-import { partialCompanyInput } from './partial-company.input';
-import { userInput } from './user.input';
+import { PartialAddressInput } from './partial-address.input';
+import { PartialCompanyInput } from './partial-company.input';
+import { UserInput } from './user.input';
 
-export const partialUserInput = t.Composite(
+export const PartialUserInput = t.Composite(
   [
-    t.Partial(t.Omit(userInput, ['address', 'company'])),
+    t.Partial(t.Omit(UserInput, ['address', 'company'])),
     t.Object({
-      address: t.Optional(partialAddressInput),
-      company: t.Optional(partialCompanyInput),
+      address: t.Optional(PartialAddressInput),
+      company: t.Optional(PartialCompanyInput),
     }),
   ],
   {
@@ -17,5 +17,3 @@ export const partialUserInput = t.Composite(
     title: 'Partial User Input',
   },
 );
-
-export type PartialUserInput = typeof partialUserInput.static;

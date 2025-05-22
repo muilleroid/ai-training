@@ -1,12 +1,12 @@
 import { t } from 'elysia';
 
-import { addressInput } from './address.input';
-import { companyInput } from './company.input';
+import { AddressInput } from './address.input';
+import { CompanyInput } from './company.input';
 
-export const userInput = t.Object(
+export const UserInput = t.Object(
   {
-    address: addressInput,
-    company: companyInput,
+    address: AddressInput,
+    company: CompanyInput,
     email: t.String({
       description: 'User email address',
       example: 'john.doe@example.com',
@@ -39,5 +39,3 @@ export const userInput = t.Object(
     title: 'User Input',
   },
 );
-
-export type UserInput = typeof userInput.static;

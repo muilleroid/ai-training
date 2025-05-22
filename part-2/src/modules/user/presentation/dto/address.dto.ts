@@ -1,15 +1,15 @@
 import { t } from 'elysia';
 
-import { geoDto } from './geo.dto';
+import { GeoDto } from './geo.dto';
 
-export const addressDto = t.Object(
+export const AddressDto = t.Object(
   {
     city: t.String({
       description: 'City name',
       example: 'Gwenborough',
       minLength: 1,
     }),
-    geo: t.Optional(t.Nullable(geoDto)),
+    geo: t.Optional(t.Nullable(GeoDto)),
     street: t.String({
       description: 'Street name and number',
       example: 'Kulas Light',
@@ -31,5 +31,3 @@ export const addressDto = t.Object(
     title: 'Address DTO',
   },
 );
-
-export type AddressDto = typeof addressDto.static;

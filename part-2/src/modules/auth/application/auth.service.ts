@@ -14,32 +14,32 @@ export const AuthService = new Elysia({ name: 'auth/service' })
         return accountDomain.findById({ accountId });
       },
       signIn: async ({ email, password }: SignInParams) => {
-        const auth = await accountDomain.findByEmail({ email });
+        const account = await accountDomain.findByEmail({ email });
 
-        if (!auth) {
+        if (!account) {
           return null;
         }
 
         const passwordValid = await cryptoDomain.verify({
           password,
-          passwordHash: auth.passwordHash,
+          passwordHash: account.passwordHash,
         });
 
         if (!passwordValid) {
           return null;
         }
 
-        const token = await jwtDomain.sign({ id: auth.id });
+        const token = await jwtDomain.sign({ id: account.id });
 
         return {
-          auth,
+          account,
           token,
         };
       },
       signUp: async ({ email, name, password }: SignUpParams) => {
         const passwordHash = await cryptoDomain.hash({ password });
 
-        const auth = await accountDomain.create({
+        const account = await accountDomain.create({
           account: {
             email,
             name,
@@ -47,14 +47,14 @@ export const AuthService = new Elysia({ name: 'auth/service' })
           },
         });
 
-        if (!auth) {
+        if (!account) {
           return null;
         }
 
-        const token = await jwtDomain.sign({ id: auth.id });
+        const token = await jwtDomain.sign({ id: account.id });
 
         return {
-          auth,
+          account,
           token,
         };
       },

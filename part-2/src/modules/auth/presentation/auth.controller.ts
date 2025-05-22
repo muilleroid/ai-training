@@ -19,13 +19,13 @@ export const AuthController = new Elysia({ name: 'auth' })
   .get(
     '/me',
     async ({ accountId, authService, status }) => {
-      const auth = await authService.findById({ accountId });
+      const account = await authService.findById({ accountId });
 
-      if (!auth) {
+      if (!account) {
         return status(401, { message: 'Unauthorized' });
       }
 
-      return auth;
+      return account;
     },
     {
       authenticated: true,
@@ -69,16 +69,16 @@ export const AuthController = new Elysia({ name: 'auth' })
   .post(
     '/sign-in',
     async ({ authService, body: { email, password }, status }) => {
-      const auth = await authService.signIn({
+      const account = await authService.signIn({
         email,
         password,
       });
 
-      if (!auth) {
+      if (!account) {
         return status(401, { message: 'Invalid credentials' });
       }
 
-      return auth;
+      return account;
     },
     {
       body: SignInInput,
@@ -117,17 +117,17 @@ export const AuthController = new Elysia({ name: 'auth' })
   .post(
     '/sign-up',
     async ({ authService, body: { email, name, password }, status }) => {
-      const token = await authService.signUp({
+      const response = await authService.signUp({
         email,
         name,
         password,
       });
 
-      if (!token) {
+      if (!response) {
         return status(400, { message: 'Cannot sign up' });
       }
 
-      return status(201, token);
+      return status(201, response);
     },
     {
       body: SignUpInput,

@@ -147,8 +147,10 @@ export default tsEslint.config(
     },
     settings: {
       'import/resolver': {
-        typescript: true,
-        node: true,
+        typescript: {
+          alwaysTryTypes: true,
+          bun: true,
+        },
       },
     },
   },

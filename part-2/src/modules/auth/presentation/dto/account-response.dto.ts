@@ -4,7 +4,7 @@ import { AccountDto } from './account.dto';
 
 export const AccountResponseDto = t.Object(
   {
-    auth: AccountDto,
+    account: AccountDto,
     token: t.String({
       description: 'JWT authentication token',
       examples: ['eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'],

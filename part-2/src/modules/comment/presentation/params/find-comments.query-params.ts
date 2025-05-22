@@ -17,6 +17,6 @@ export const FindCommentsQueryParams = t.Object(
   },
   {
     description: 'Query parameters for filtering comments',
-    title: 'Find Query Parameters',
+    title: 'Find Comments Query Parameters',
   },
 );

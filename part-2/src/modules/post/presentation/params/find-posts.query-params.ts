@@ -11,6 +11,6 @@ export const FindPostsQueryParams = t.Object(
   },
   {
     description: 'Query parameters for filtering posts',
-    title: 'Find Query Parameters',
+    title: 'Find Posts Query Parameters',
   },
 );

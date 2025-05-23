@@ -29,7 +29,7 @@ describe('/auth', () => {
       expect(status).toEqual(401);
     });
 
-    it('should return 200 for authenticated user', async () => {
+    it('should return 200', async () => {
       const { data, status } = await request({
         authenticated: true,
         path: '/auth/me',
@@ -37,17 +37,16 @@ describe('/auth', () => {
 
       expect(status).toEqual(200);
 
-      const { id, ...sanitizedAccount } = data;
-
-      expect(sanitizedAccount).toEqual({
+      expect(data).toEqual({
         email: 'admin@mail.com',
+        id: accountId,
         name: 'Admin',
       });
     });
   });
 
   describe('/sign-in (POST)', () => {
-    it('should return 401 if account not found', async () => {
+    it('should return 401', async () => {
       const { status } = await request({
         method: 'POST',
         path: '/auth/sign-in',
@@ -60,7 +59,7 @@ describe('/auth', () => {
       expect(status).toEqual(401);
     });
 
-    it('should return 200 for valid credentials', async () => {
+    it('should return 200', async () => {
       const { data, status } = await request({
         method: 'POST',
         path: '/auth/sign-in',
@@ -76,10 +75,10 @@ describe('/auth', () => {
       expect(data).toHaveProperty('token');
 
       const { account, token } = data;
-      const { id, ...sanitizedAccount } = account;
 
-      expect(sanitizedAccount).toEqual({
+      expect(account).toEqual({
         email: 'admin@mail.com',
+        id: accountId,
         name: 'Admin',
       });
 
@@ -119,10 +118,10 @@ describe('/auth', () => {
       expect(data).toHaveProperty('token');
 
       const { account, token } = data;
-      const { id, ...sanitizedAccount } = account;
 
-      expect(sanitizedAccount).toEqual({
+      expect(account).toEqual({
         email: 'admin+1@mail.com',
+        id: expect.any(String),
         name: 'Admin',
       });
 

@@ -66,14 +66,8 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
   )
   .get(
     '/:postId',
-    async ({ params: { postId }, postService, status }) => {
-      const post = await postService.findById({ postId });
-
-      if (!post) {
-        return status(404, { message: 'Post not found' });
-      }
-
-      return post;
+    ({ params: { postId }, postService }) => {
+      return postService.findById({ postId });
     },
     {
       authenticated: true,
@@ -120,20 +114,13 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
         tags: ['Posts'],
       },
       params: PostIdUrlParams,
-      response: {
-        200: PostDto,
-        404: NotFoundErrorDto,
-      },
+      response: PostDto,
     },
   )
   .post(
     '/',
     async ({ body, postService, status }) => {
       const post = await postService.create({ post: body });
-
-      if (!post) {
-        return status(409, { message: 'Conflict' });
-      }
 
       return status(201, post);
     },
@@ -184,23 +171,16 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
       },
       response: {
         201: PostDto,
-        409: ConflictErrorDto,
       },
     },
   )
   .put(
     '/:postId',
-    async ({ body, params: { postId }, postService, status }) => {
-      const post = await postService.update({
+    ({ body, params: { postId }, postService }) => {
+      return postService.update({
         post: body,
         postId,
       });
-
-      if (!post) {
-        return status(404, { message: 'Post not found' });
-      }
-
-      return post;
     },
     {
       authenticated: true,
@@ -248,25 +228,16 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
         tags: ['Posts'],
       },
       params: PostIdUrlParams,
-      response: {
-        200: PostDto,
-        404: NotFoundErrorDto,
-      },
+      response: PostDto,
     },
   )
   .patch(
     '/:postId',
-    async ({ body, params: { postId }, postService, status }) => {
-      const post = await postService.update({
+    async ({ body, params: { postId }, postService }) => {
+      return postService.update({
         post: body,
         postId,
       });
-
-      if (!post) {
-        return status(404, { message: 'Post not found' });
-      }
-
-      return post;
     },
     {
       authenticated: true,
@@ -314,22 +285,13 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
         tags: ['Posts'],
       },
       params: PostIdUrlParams,
-      response: {
-        200: PostDto,
-        404: NotFoundErrorDto,
-      },
+      response: PostDto,
     },
   )
   .delete(
     '/:postId',
-    async ({ params: { postId }, postService, status }) => {
-      const post = await postService.delete({ postId });
-
-      if (!post) {
-        return status(404, { message: 'Post not found' });
-      }
-
-      return post;
+    ({ params: { postId }, postService }) => {
+      return postService.delete({ postId });
     },
     {
       authenticated: true,
@@ -376,9 +338,6 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
         tags: ['Posts'],
       },
       params: PostIdUrlParams,
-      response: {
-        200: PostDto,
-        404: NotFoundErrorDto,
-      },
+      response: PostDto,
     },
   );

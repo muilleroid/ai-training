@@ -14,7 +14,7 @@ export const appFactory = () => {
     .use(instrumentation)
     .use(setup)
     .onError(({ code, error, logger, set }) => {
-      if (error instanceof DatabaseError && error.code === '23505') {
+      if (error instanceof DatabaseError && (error.code === '23505' || error.code === '23503')) {
         set.status = 409;
 
         return { message: 'Conflict' };

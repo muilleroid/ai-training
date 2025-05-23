@@ -20,7 +20,7 @@ export const UserDomain = new Elysia({ name: 'user/domain' })
       find: () => {
         return userRepository.find();
       },
-      findById: async ({ userId }: FindByIdParams) => {
+      findById: ({ userId }: FindByIdParams) => {
         return userRepository.findById({ userId });
       },
       update: ({ user, userId }: UpdateParams) => {

@@ -2,7 +2,14 @@ import { Elysia } from 'elysia';
 
 import { PostRepository } from '../infrastructure/repositories';
 
-import type { CreateParams, DeleteParams, FindByIdParams, FindParams, UpdateParams } from './post-domain.types';
+import type {
+  CreateParams,
+  DeleteParams,
+  ExistsParams,
+  FindByIdParams,
+  FindParams,
+  UpdateParams,
+} from './post-domain.types';
 
 export const PostDomain = new Elysia({ name: 'post/domain' })
   .use(PostRepository)
@@ -13,6 +20,9 @@ export const PostDomain = new Elysia({ name: 'post/domain' })
       },
       delete: ({ postId }: DeleteParams) => {
         return postRepository.delete({ postId });
+      },
+      exists: ({ postId }: ExistsParams) => {
+        return postRepository.exists({ postId });
       },
       find: ({ userId }: FindParams = {}) => {
         return postRepository.find({ userId });

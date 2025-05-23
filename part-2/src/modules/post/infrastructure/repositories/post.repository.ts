@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { Elysia } from 'elysia';
 import omitEmpty from 'omit-empty-es';
 
@@ -32,6 +32,21 @@ export const PostRepository = new Elysia({ name: 'post/repository' })
         await db.delete(postSchema).where(eq(postSchema.id, postId));
 
         return post;
+      },
+      exists: async ({ postId }) => {
+        const { rows } = await db.execute<{ exists: boolean }>(sql`
+          SELECT EXISTS (
+            SELECT
+              1
+            FROM
+              ${postSchema}
+            WHERE
+              ${postSchema.id} = ${postId}
+          ) as exists;`);
+
+        const [{ exists }] = rows;
+
+        return exists;
       },
       find: async ({ userId } = {}) => {
         const posts = await db

@@ -12,13 +12,13 @@ describe('/users', () => {
   beforeEach(async () => {
     const companyId = createId();
 
-    await db.insert(companySchema).values({
-      bs: 'bs',
-      catchPhrase: 'catchPhrase',
-      id: companyId,
-      name: 'name',
-    });
     await db.transaction(async (tx) => {
+      await tx.insert(companySchema).values({
+        bs: 'bs',
+        catchPhrase: 'catchPhrase',
+        id: companyId,
+        name: 'name',
+      });
       await tx.insert(userSchema).values({
         companyId,
         email: 'user@mail.com',
@@ -181,9 +181,7 @@ describe('/users', () => {
 
       expect(status).toEqual(201);
 
-      const { id, ...sanitizedData } = data;
-
-      expect(sanitizedData).toEqual({
+      expect(data).toEqual({
         address: {
           city: 'city',
           geo: {
@@ -200,6 +198,7 @@ describe('/users', () => {
           name: 'name',
         },
         email: 'user+1@mail.com',
+        id: expect.any(String),
         name: 'name',
         phone: '1-770-736-8031',
         username: 'username1',

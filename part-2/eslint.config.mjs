@@ -10,7 +10,7 @@ import tsEslint from 'typescript-eslint';
 
 export default tsEslint.config(
   {
-    ignores: ['data', 'node_modules', '*.cjs', '*.js', '*.mjs'],
+    ignores: ['@type-extensions', 'data', 'node_modules', '*.cjs', '*.js', '*.mjs'],
   },
   {
     languageOptions: {
@@ -75,15 +75,6 @@ export default tsEslint.config(
           prefer: 'type-imports',
         },
       ],
-      '@typescript-eslint/explicit-member-accessibility': [
-        'error',
-        {
-          accessibility: 'explicit',
-          overrides: { constructors: 'no-public' },
-        },
-      ],
-      '@typescript-eslint/explicit-module-boundary-types': 'warn',
-      '@typescript-eslint/interface-name-prefix': 'off',
       '@typescript-eslint/member-ordering': [
         'warn',
         {

@@ -11,4 +11,4 @@ const pool = new Pool({
   min: 1,
 });
 
-export const connection = drizzle(pool);
+export const db = drizzle(pool);

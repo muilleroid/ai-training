@@ -7,7 +7,7 @@ import { AuthGuard, AuthService } from '../application';
 import { AccountDto, AccountResponseDto } from './dto';
 import { SignInInput, SignUpInput } from './input';
 
-export const AuthController = new Elysia({ name: 'auth' })
+export const AuthController = new Elysia({ name: 'auth', prefix: '/auth' })
   .use(AuthGuard)
   .use(AuthService)
   .model({
@@ -75,7 +75,7 @@ export const AuthController = new Elysia({ name: 'auth' })
       });
 
       if (!account) {
-        return status(401, { message: 'Invalid credentials' });
+        return status(401, { message: 'Unauthorized' });
       }
 
       return account;
@@ -102,7 +102,7 @@ export const AuthController = new Elysia({ name: 'auth' })
                 },
               },
             },
-            description: 'Invalid credentials',
+            description: 'Unauthorized',
           },
         },
         summary: 'Sign in',
@@ -127,13 +127,13 @@ export const AuthController = new Elysia({ name: 'auth' })
         return status(400, { message: 'Cannot sign up' });
       }
 
-      return status(201, response);
+      return status(200, response);
     },
     {
       body: SignUpInput,
       detail: {
         responses: {
-          '201': {
+          '200': {
             content: {
               'application/json': {
                 schema: {
@@ -158,7 +158,7 @@ export const AuthController = new Elysia({ name: 'auth' })
         tags: ['Auth'],
       },
       response: {
-        201: AccountResponseDto,
+        200: AccountResponseDto,
         400: BadRequestErrorDto,
       },
     },

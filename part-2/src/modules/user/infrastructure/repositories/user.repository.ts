@@ -12,13 +12,13 @@ import { toUser, toUserList } from './user-repository.mapper';
 
 export const UserRepository = new Elysia({ name: 'user/repository' })
   .use(setup)
-  .derive({ as: 'global' }, function deriveUserRepository({ connection }) {
+  .derive({ as: 'global' }, function deriveUserRepository({ db }) {
     const userRepository: TUserRepository = {
       create: async ({ user }) => {
         const { address, company } = user;
         const { geo } = address;
 
-        const userId = await connection.transaction(async (tx) => {
+        const userId = await db.transaction(async (tx) => {
           const [createdCompany] = await tx
             .insert(companySchema)
             .values({
@@ -58,12 +58,12 @@ export const UserRepository = new Elysia({ name: 'user/repository' })
       delete: async ({ userId }) => {
         const user = await userRepository.findById({ userId });
 
-        await connection.delete(userSchema).where(eq(userSchema.id, userId)).returning();
+        await db.delete(userSchema).where(eq(userSchema.id, userId)).returning();
 
         return user;
       },
       find: async () => {
-        const users = await connection
+        const users = await db
           .select()
           .from(userSchema)
           .leftJoin(addressSchema, eq(userSchema.id, addressSchema.userId))
@@ -72,7 +72,7 @@ export const UserRepository = new Elysia({ name: 'user/repository' })
         return toUserList(users);
       },
       findById: async ({ userId }) => {
-        const [user] = await connection
+        const [user] = await db
           .select()
           .from(userSchema)
           .where(eq(userSchema.id, userId))
@@ -85,7 +85,7 @@ export const UserRepository = new Elysia({ name: 'user/repository' })
       update: async ({ user, userId }) => {
         const { address, company } = user;
 
-        const updated = await connection.transaction(async (tx) => {
+        const updated = await db.transaction(async (tx) => {
           const [foundUser] = await tx
             .select({ companyId: userSchema.companyId })
             .from(userSchema)

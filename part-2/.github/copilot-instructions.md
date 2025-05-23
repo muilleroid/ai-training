@@ -21,3 +21,8 @@
 - Sort properties alphabetically case insensitive.
 - Avoid adding unnecessary comments.
 - Solve circular dependencies by refactoring code, but only as a last step.
+- Place e2e tests in the `tests` folder.
+- Follow the same structure for e2e tests.
+- Use `tests/helpers` to perform requests in e2e tests.
+- Setup the database before running e2e tests.
+- Database setup for e2e tests should be defined in `beforeEach` hook of corresponding describe group.

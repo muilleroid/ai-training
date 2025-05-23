@@ -12,17 +12,17 @@ import { toComment, toCommentList } from './comment-repository.mapper';
 
 export const CommentRepository = new Elysia({ name: 'comment/repository' })
   .use(setup)
-  .derive({ as: 'global' }, function deriveCommentRepository({ connection }) {
+  .derive({ as: 'global' }, function deriveCommentRepository({ db }) {
     const commentRepository: TCommentRepository = {
       create: async ({ comment }) => {
-        const [createdComment] = await connection.insert(commentSchema).values(comment).returning();
+        const [createdComment] = await db.insert(commentSchema).values(comment).returning();
 
         return toComment(createdComment);
       },
       delete: async ({ commentId }) => {
         const comment = await commentRepository.findById({ commentId });
 
-        await connection.delete(commentSchema).where(eq(commentSchema.id, commentId));
+        await db.delete(commentSchema).where(eq(commentSchema.id, commentId));
 
         return comment;
       },
@@ -32,7 +32,7 @@ export const CommentRepository = new Elysia({ name: 'comment/repository' })
           ...(userId ? [eq(commentSchema.userId, userId)] : []),
         ];
 
-        const comments = await connection
+        const comments = await db
           .select()
           .from(commentSchema)
           .where(filters.length > 0 ? and(...filters) : undefined);
@@ -40,7 +40,7 @@ export const CommentRepository = new Elysia({ name: 'comment/repository' })
         return toCommentList(comments);
       },
       findById: async ({ commentId }) => {
-        const [comment] = await connection.select().from(commentSchema).where(eq(commentSchema.id, commentId)).limit(1);
+        const [comment] = await db.select().from(commentSchema).where(eq(commentSchema.id, commentId)).limit(1);
 
         return toComment(comment);
       },
@@ -48,7 +48,7 @@ export const CommentRepository = new Elysia({ name: 'comment/repository' })
         const commentUpdates = omitEmpty<object>(comment);
 
         if (Object.keys(commentUpdates).length > 0) {
-          await connection.update(commentSchema).set(commentUpdates).where(eq(commentSchema.id, commentId));
+          await db.update(commentSchema).set(commentUpdates).where(eq(commentSchema.id, commentId));
         }
 
         return commentRepository.findById({ commentId });

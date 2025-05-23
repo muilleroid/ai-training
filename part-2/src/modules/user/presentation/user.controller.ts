@@ -1,6 +1,5 @@
 import { Elysia } from 'elysia';
 
-import { ConflictErrorDto, NotFoundErrorDto } from 'core/presentation/dto';
 import { AuthGuard } from 'modules/auth/application';
 
 import { UserService } from '../application';
@@ -66,14 +65,8 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
   )
   .get(
     '/:userId',
-    async ({ params: { userId }, status, userService }) => {
-      const user = await userService.findById({ userId });
-
-      if (!user) {
-        return status(404, { message: 'User not found' });
-      }
-
-      return user;
+    ({ params: { userId }, userService }) => {
+      return userService.findById({ userId });
     },
     {
       authenticated: true,
@@ -120,20 +113,13 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
         tags: ['Users'],
       },
       params: UserIdUrlParams,
-      response: {
-        200: UserDto,
-        404: NotFoundErrorDto,
-      },
+      response: UserDto,
     },
   )
   .post(
     '/',
     async ({ body, status, userService }) => {
       const user = await userService.create({ user: body });
-
-      if (!user) {
-        return status(409, { message: 'Conflict' });
-      }
 
       return status(201, user);
     },
@@ -182,25 +168,16 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
         summary: 'Create new user',
         tags: ['Users'],
       },
-      response: {
-        201: UserDto,
-        409: ConflictErrorDto,
-      },
+      response: { 201: UserDto },
     },
   )
   .put(
     '/:userId',
-    async ({ body, params: { userId }, status, userService }) => {
-      const user = await userService.update({
+    ({ body, params: { userId }, userService }) => {
+      return userService.update({
         user: body,
         userId,
       });
-
-      if (!user) {
-        return status(404, { message: 'User not found' });
-      }
-
-      return user;
     },
     {
       authenticated: true,
@@ -248,25 +225,16 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
         tags: ['Users'],
       },
       params: UserIdUrlParams,
-      response: {
-        200: UserDto,
-        404: NotFoundErrorDto,
-      },
+      response: UserDto,
     },
   )
   .patch(
     '/:userId',
-    async ({ body, params: { userId }, status, userService }) => {
-      const user = await userService.update({
+    ({ body, params: { userId }, userService }) => {
+      return userService.update({
         user: body,
         userId,
       });
-
-      if (!user) {
-        return status(404, { message: 'User not found' });
-      }
-
-      return user;
     },
     {
       authenticated: true,
@@ -314,22 +282,13 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
         tags: ['Users'],
       },
       params: UserIdUrlParams,
-      response: {
-        200: UserDto,
-        404: NotFoundErrorDto,
-      },
+      response: UserDto,
     },
   )
   .delete(
     '/:userId',
-    async ({ params: { userId }, status, userService }) => {
-      const user = await userService.delete({ userId });
-
-      if (!user) {
-        return status(404, { message: 'User not found' });
-      }
-
-      return user;
+    ({ params: { userId }, userService }) => {
+      return userService.delete({ userId });
     },
     {
       authenticated: true,
@@ -376,9 +335,6 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
         tags: ['Users'],
       },
       params: UserIdUrlParams,
-      response: {
-        200: UserDto,
-        404: NotFoundErrorDto,
-      },
+      response: UserDto,
     },
   );

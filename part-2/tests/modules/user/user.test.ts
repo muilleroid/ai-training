@@ -86,56 +86,6 @@ describe('/users', () => {
     });
   });
 
-  describe('/:userId (GET)', () => {
-    it('should return 401', async () => {
-      const { status } = await request({ path: `/users/${userId}` });
-
-      expect(status).toEqual(401);
-    });
-
-    it('should return 404', async () => {
-      const { status } = await request({
-        authenticated: true,
-        path: `/users/${createId()}`,
-      });
-
-      expect(status).toEqual(404);
-    });
-
-    it('should return 200', async () => {
-      const { data, status } = await request({
-        authenticated: true,
-        path: `/users/${userId}`,
-      });
-
-      expect(status).toEqual(200);
-
-      expect(data).toEqual({
-        address: {
-          city: 'city',
-          geo: {
-            lat: '40.7128',
-            lng: '-74.0060',
-          },
-          street: 'street',
-          suite: 'suite',
-          zipcode: '92998-3874',
-        },
-        company: {
-          bs: 'bs',
-          catchPhrase: 'catchPhrase',
-          name: 'name',
-        },
-        email: 'user@mail.com',
-        id: userId,
-        name: 'name',
-        phone: '1-770-736-8031',
-        username: 'username',
-        website: 'https://website.com',
-      });
-    });
-  });
-
   describe('/ (POST)', () => {
     it('should return 401', async () => {
       const { status } = await request({
@@ -253,6 +203,56 @@ describe('/users', () => {
         name: 'name',
         phone: '1-770-736-8031',
         username: 'username1',
+        website: 'https://website.com',
+      });
+    });
+  });
+
+  describe('/:userId (GET)', () => {
+    it('should return 401', async () => {
+      const { status } = await request({ path: `/users/${userId}` });
+
+      expect(status).toEqual(401);
+    });
+
+    it('should return 404', async () => {
+      const { status } = await request({
+        authenticated: true,
+        path: `/users/${createId()}`,
+      });
+
+      expect(status).toEqual(404);
+    });
+
+    it('should return 200', async () => {
+      const { data, status } = await request({
+        authenticated: true,
+        path: `/users/${userId}`,
+      });
+
+      expect(status).toEqual(200);
+
+      expect(data).toEqual({
+        address: {
+          city: 'city',
+          geo: {
+            lat: '40.7128',
+            lng: '-74.0060',
+          },
+          street: 'street',
+          suite: 'suite',
+          zipcode: '92998-3874',
+        },
+        company: {
+          bs: 'bs',
+          catchPhrase: 'catchPhrase',
+          name: 'name',
+        },
+        email: 'user@mail.com',
+        id: userId,
+        name: 'name',
+        phone: '1-770-736-8031',
+        username: 'username',
         website: 'https://website.com',
       });
     });

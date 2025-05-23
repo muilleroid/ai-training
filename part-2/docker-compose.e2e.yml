@@ -1,5 +1,5 @@
 services:
-  postgres:
+  postgres-e2e:
     image: postgres:latest
     restart: always
     environment:
@@ -19,11 +19,11 @@ services:
     entrypoint: ['/bin/ash', '/usr/src/migrations/entrypoint.sh']
     working_dir: /usr/src/migrations
     environment:
-      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
+      - DATABASE_URL=postgres://postgres:postgres@postgres-e2e:5432/postgres
     volumes:
       - ./docker/migrations/entrypoint.sh:/usr/src/migrations/entrypoint.sh
       - ./drizzle:/usr/src/migrations/drizzle
       - ./drizzle.config.ts:/usr/src/migrations/drizzle.config.ts
     depends_on:
-      postgres:
+      postgres-e2e:
         condition: service_healthy

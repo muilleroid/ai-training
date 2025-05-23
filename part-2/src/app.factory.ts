@@ -3,6 +3,7 @@ import { DatabaseError } from 'pg';
 
 import { config } from 'config';
 import { swagger } from 'core/application/swagger';
+import { BaseError } from 'core/errors';
 import { setup } from 'core/setup';
 
 import { instrumentation } from './instrumentation';
@@ -17,6 +18,12 @@ export const appFactory = () => {
         set.status = 409;
 
         return { message: 'Conflict' };
+      }
+
+      if (error instanceof BaseError) {
+        set.status = error.status;
+
+        return { message: error.message };
       }
 
       if (code === 'NOT_FOUND') {

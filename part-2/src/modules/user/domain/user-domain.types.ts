@@ -8,6 +8,10 @@ export type DeleteParams = {
   userId: string;
 };
 
+export type ExistsParams = {
+  userId: string;
+};
+
 export type FindByIdParams = {
   userId: string;
 };

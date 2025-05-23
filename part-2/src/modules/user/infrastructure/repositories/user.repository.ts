@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { Elysia } from 'elysia';
 import omitEmpty from 'omit-empty-es';
 
@@ -60,6 +60,21 @@ export const UserRepository = new Elysia({ name: 'user/repository' })
         await db.delete(userSchema).where(eq(userSchema.id, userId)).returning();
 
         return user;
+      },
+      exists: async ({ userId }) => {
+        const { rows } = await db.execute<{ exists: boolean }>(sql`
+          SELECT EXISTS (
+            SELECT
+              1
+            FROM
+              ${userSchema}
+            WHERE
+              ${userSchema.id} = ${userId}
+          ) as exists;`);
+
+        const [{ exists }] = rows;
+
+        return exists;
       },
       find: async () => {
         const users = await db

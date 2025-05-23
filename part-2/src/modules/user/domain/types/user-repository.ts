@@ -10,6 +10,10 @@ export type DeleteParams = {
   userId: string;
 };
 
+export type ExistsParams = {
+  userId: string;
+};
+
 export type FindByIdParams = {
   userId: string;
 };
@@ -22,6 +26,7 @@ export type UpdateParams = {
 export type TUserRepository = {
   create: (params: CreateParams) => Promise<User | null>;
   delete: (params: DeleteParams) => Promise<User | null>;
+  exists: (params: ExistsParams) => Promise<boolean>;
   find: () => Promise<User[]>;
   findById: (params: FindByIdParams) => Promise<User | null>;
   update: (params: UpdateParams) => Promise<User | null>;

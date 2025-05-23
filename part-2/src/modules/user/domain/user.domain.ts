@@ -2,7 +2,7 @@ import { Elysia } from 'elysia';
 
 import { UserRepository } from '../infrastructure/repositories';
 
-import type { CreateParams, DeleteParams, FindByIdParams, UpdateParams } from './user-domain.types';
+import type { CreateParams, DeleteParams, ExistsParams, FindByIdParams, UpdateParams } from './user-domain.types';
 
 export const UserDomain = new Elysia({ name: 'user/domain' })
   .use(UserRepository)
@@ -14,10 +14,13 @@ export const UserDomain = new Elysia({ name: 'user/domain' })
       delete: ({ userId }: DeleteParams) => {
         return userRepository.delete({ userId });
       },
+      exists: ({ userId }: ExistsParams) => {
+        return userRepository.exists({ userId });
+      },
       find: () => {
         return userRepository.find();
       },
-      findById: ({ userId }: FindByIdParams) => {
+      findById: async ({ userId }: FindByIdParams) => {
         return userRepository.findById({ userId });
       },
       update: ({ user, userId }: UpdateParams) => {

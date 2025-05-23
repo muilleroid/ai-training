@@ -20,6 +20,8 @@ export let authToken: string;
 beforeAll(async () => {
   app = appFactory();
   authToken = await signJwt({ id: accountId });
+
+  await db.execute(sql`SELECT 1;`);
 });
 
 afterAll(() => {

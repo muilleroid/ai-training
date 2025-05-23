@@ -3,7 +3,6 @@ import { Elysia } from 'elysia';
 import omitEmpty from 'omit-empty-es';
 
 import { setup } from 'core/setup';
-
 import type { TUserRepository } from 'modules/user/domain/types';
 
 import { addressSchema, companySchema, userSchema } from '../schemas';

@@ -1,24 +1,25 @@
 import { Elysia } from 'elysia';
 
-import { BadRequestErrorDto, NotFoundErrorDto } from 'core/presentation/dto';
+import { ConflictErrorDto, NotFoundErrorDto } from 'core/presentation/dto';
 import { AuthGuard } from 'modules/auth/application';
 
 import { PostService } from '../application';
 
 import { PostDto, PostsDto } from './dto';
-import { PartialPostInput, PostInput } from './input';
+import { CreatePostInput, PartialUpdatePostInput, UpdatePostInput } from './input';
 import { FindPostsQueryParams, PostIdUrlParams } from './params';
 
 export const PostController = new Elysia({ name: 'post/controller', prefix: '/posts' })
   .use(AuthGuard)
   .use(PostService)
   .model({
+    CreatePostInput,
     FindPostsQueryParams,
-    PartialPostInput,
+    PartialUpdatePostInput,
     PostDto,
     PostIdUrlParams,
-    PostInput,
     PostsDto,
+    UpdatePostInput,
   })
   .get(
     '/',
@@ -131,14 +132,14 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
       const post = await postService.create({ post: body });
 
       if (!post) {
-        return status(400, { message: 'Post cannot be created' });
+        return status(409, { message: 'Conflict' });
       }
 
       return status(201, post);
     },
     {
       authenticated: true,
-      body: PostInput,
+      body: CreatePostInput,
       detail: {
         description: 'Create a new post with the provided data',
         responses: {
@@ -152,16 +153,6 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
             },
             description: 'Post created successfully',
           },
-          '400': {
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/BadRequestErrorDto',
-                },
-              },
-            },
-            description: 'Invalid post data or post cannot be created',
-          },
           '401': {
             content: {
               'application/json': {
@@ -171,6 +162,16 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
               },
             },
             description: 'Unauthorized',
+          },
+          '409': {
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/ConflictErrorDto',
+                },
+              },
+            },
+            description: 'Conflict',
           },
         },
         security: [
@@ -183,7 +184,7 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
       },
       response: {
         201: PostDto,
-        400: BadRequestErrorDto,
+        409: ConflictErrorDto,
       },
     },
   )
@@ -203,7 +204,7 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
     },
     {
       authenticated: true,
-      body: PostInput,
+      body: UpdatePostInput,
       detail: {
         description: 'Update all fields of an existing post',
         responses: {
@@ -269,7 +270,7 @@ export const PostController = new Elysia({ name: 'post/controller', prefix: '/po
     },
     {
       authenticated: true,
-      body: PartialPostInput,
+      body: PartialUpdatePostInput,
       detail: {
         description: 'Update specific fields of an existing post',
         responses: {

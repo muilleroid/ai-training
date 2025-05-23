@@ -1,8 +1,9 @@
 import type { Post } from './post';
-import type { PostInput } from './post-input';
+import type { CreatePostInput } from './create-post-input';
+import type { UpdatePostInput } from './update-post-input';
 
 export type CreateParams = {
-  post: PostInput;
+  post: CreatePostInput;
 };
 
 export type DeleteParams = {
@@ -18,7 +19,7 @@ export type FindByIdParams = {
 };
 
 export type UpdateParams = {
-  post: Partial<PostInput>;
+  post: Partial<UpdatePostInput>;
   postId: string;
 };
 

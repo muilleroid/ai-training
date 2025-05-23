@@ -1,2 +1,2 @@
-export * from './comment.input';
-export * from './partial-comment.input';
+export * from './create-comment.input';
+export * from './update-comment.input';

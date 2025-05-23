@@ -24,6 +24,7 @@ export const request = async ({ authenticated = false, method = 'GET', path, pay
       method,
     }),
   );
+
   const data = await response.json();
 
   return {

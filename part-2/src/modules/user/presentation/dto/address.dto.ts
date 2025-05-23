@@ -9,7 +9,7 @@ export const AddressDto = t.Object(
       example: 'Gwenborough',
       minLength: 1,
     }),
-    geo: t.Optional(t.Nullable(GeoDto)),
+    geo: t.MaybeEmpty(GeoDto),
     street: t.String({
       description: 'Street name and number',
       example: 'Kulas Light',

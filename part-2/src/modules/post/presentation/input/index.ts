@@ -1,2 +1,3 @@
-export * from './partial-post.input';
-export * from './post.input';
+export * from './create-post.input';
+export * from './partial-update-post.input';
+export * from './update-post.input';

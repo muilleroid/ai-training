@@ -15,7 +15,14 @@ export const CommentRepository = new Elysia({ name: 'comment/repository' })
   .derive({ as: 'global' }, function deriveCommentRepository({ db }) {
     const commentRepository: TCommentRepository = {
       create: async ({ comment }) => {
-        const [createdComment] = await db.insert(commentSchema).values(comment).returning();
+        const [createdComment] = await db
+          .insert(commentSchema)
+          .values({
+            body: comment.body,
+            postId: comment.postId,
+            userId: comment.userId,
+          })
+          .returning();
 
         return toComment(createdComment);
       },
@@ -45,7 +52,7 @@ export const CommentRepository = new Elysia({ name: 'comment/repository' })
         return toComment(comment);
       },
       update: async ({ comment, commentId }) => {
-        const commentUpdates = omitEmpty<object>(comment);
+        const commentUpdates = omitEmpty<object>({ body: comment.body });
 
         if (Object.keys(commentUpdates).length > 0) {
           await db.update(commentSchema).set(commentUpdates).where(eq(commentSchema.id, commentId));

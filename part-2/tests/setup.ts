@@ -5,7 +5,7 @@ import { db } from 'core/infrastructure/database';
 import { accountSchema } from 'modules/auth/infrastructure/schemas';
 import { commentSchema } from 'modules/comment/infrastructure/schemas';
 import { postSchema } from 'modules/post/infrastructure/schemas';
-import { userSchema } from 'modules/user/infrastructure/schemas';
+import { addressSchema, companySchema, userSchema } from 'modules/user/infrastructure/schemas';
 
 import { appFactory } from 'app.factory';
 
@@ -31,7 +31,9 @@ afterEach(async () => {
     BEGIN TRANSACTION ;
 
     TRUNCATE TABLE ${accountSchema} CASCADE;
+    TRUNCATE TABLE ${addressSchema} CASCADE;
     TRUNCATE TABLE ${commentSchema} CASCADE;
+    TRUNCATE TABLE ${companySchema} CASCADE;
     TRUNCATE TABLE ${postSchema} CASCADE;
     TRUNCATE TABLE ${userSchema} CASCADE;
 

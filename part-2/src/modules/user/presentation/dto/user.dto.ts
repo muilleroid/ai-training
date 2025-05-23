@@ -5,8 +5,8 @@ import { CompanyDto } from './company.dto';
 
 export const UserDto = t.Object(
   {
-    address: t.Optional(t.Nullable(AddressDto)),
-    company: t.Optional(t.Nullable(CompanyDto)),
+    address: t.MaybeEmpty(AddressDto),
+    company: t.MaybeEmpty(CompanyDto),
     email: t.String({
       description: 'User email address',
       example: 'john.doe@example.com',

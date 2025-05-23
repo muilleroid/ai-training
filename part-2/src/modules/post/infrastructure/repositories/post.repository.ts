@@ -15,7 +15,14 @@ export const PostRepository = new Elysia({ name: 'post/repository' })
   .derive({ as: 'global' }, function derivePostRepository({ db }) {
     const postRepository: TPostRepository = {
       create: async ({ post }) => {
-        const [createdPost] = await db.insert(postSchema).values(post).returning();
+        const [createdPost] = await db
+          .insert(postSchema)
+          .values({
+            body: post.body,
+            title: post.title,
+            userId: post.userId,
+          })
+          .returning();
 
         return toPost(createdPost);
       },
@@ -40,7 +47,10 @@ export const PostRepository = new Elysia({ name: 'post/repository' })
         return toPost(post);
       },
       update: async ({ post, postId }) => {
-        const postUpdates = omitEmpty<object>(post);
+        const postUpdates = omitEmpty<object>({
+          body: post.body,
+          title: post.title,
+        });
 
         if (Object.keys(postUpdates).length > 0) {
           await db.update(postSchema).set(postUpdates).where(eq(postSchema.id, postId));

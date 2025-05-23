@@ -1,6 +1,6 @@
 import { t } from 'elysia';
 
-export const PostInput = t.Object(
+export const UpdatePostInput = t.Object(
   {
     body: t.String({
       description: 'The content of the post',
@@ -12,13 +12,9 @@ export const PostInput = t.Object(
       example: 'An Interesting Post Title',
       minLength: 1,
     }),
-    userId: t.String({
-      description: 'ID of the user who is creating the post',
-      example: 'ck9x8v7b600001kp5hbd6g0q2',
-    }),
   },
   {
-    description: 'Input data for creating a new post',
-    title: 'Post Input',
+    description: 'Input data for updating a post',
+    title: 'Update Post Input',
   },
 );

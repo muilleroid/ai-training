@@ -1,7 +1,7 @@
-import type { CommentInput } from '../domain/types';
+import type { CreateCommentInput, UpdateCommentInput } from '../domain/types';
 
 export type CreateParams = {
-  comment: CommentInput;
+  comment: CreateCommentInput;
 };
 
 export type DeleteParams = {
@@ -18,6 +18,6 @@ export type FindByIdParams = {
 };
 
 export type UpdateParams = {
-  comment: Partial<CommentInput>;
+  comment: Partial<UpdateCommentInput>;
   commentId: string;
 };

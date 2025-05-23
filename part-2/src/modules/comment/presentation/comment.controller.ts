@@ -1,12 +1,12 @@
 import { Elysia } from 'elysia';
 
-import { BadRequestErrorDto, NotFoundErrorDto } from 'core/presentation/dto';
+import { ConflictErrorDto, NotFoundErrorDto } from 'core/presentation/dto';
 import { AuthGuard } from 'modules/auth/application';
 
 import { CommentService } from '../application';
 
 import { CommentDto, CommentsDto } from './dto';
-import { CommentInput, PartialCommentInput } from './input';
+import { CreateCommentInput, UpdateCommentInput } from './input';
 import { CommentIdUrlParams, FindCommentsQueryParams } from './params';
 
 export const CommentController = new Elysia({ name: 'comment/controller', prefix: '/comments' })
@@ -15,10 +15,10 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
   .model({
     CommentDto,
     CommentIdUrlParams,
-    CommentInput,
     CommentsDto,
+    CreateCommentInput,
     FindCommentsQueryParams,
-    PartialCommentInput,
+    UpdateCommentInput,
   })
   .get(
     '/',
@@ -134,14 +134,14 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
       const comment = await commentService.create({ comment: body });
 
       if (!comment) {
-        return status(400, { message: 'Comment cannot be created' });
+        return status(409, { message: 'Conflict' });
       }
 
       return status(201, comment);
     },
     {
       authenticated: true,
-      body: CommentInput,
+      body: CreateCommentInput,
       detail: {
         description: 'Create a new comment for a post',
         responses: {
@@ -155,16 +155,6 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
             },
             description: 'Comment created successfully',
           },
-          '400': {
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/BadRequestErrorDto',
-                },
-              },
-            },
-            description: 'Invalid comment data or comment cannot be created',
-          },
           '401': {
             content: {
               'application/json': {
@@ -174,6 +164,16 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
               },
             },
             description: 'Unauthorized',
+          },
+          '409': {
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/ConflictErrorDto',
+                },
+              },
+            },
+            description: 'Conflict',
           },
         },
         security: [
@@ -186,7 +186,7 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
       },
       response: {
         201: CommentDto,
-        400: BadRequestErrorDto,
+        409: ConflictErrorDto,
       },
     },
   )
@@ -206,7 +206,7 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
     },
     {
       authenticated: true,
-      body: CommentInput,
+      body: UpdateCommentInput,
       detail: {
         description: 'Update all fields of an existing comment',
         responses: {
@@ -272,7 +272,7 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
     },
     {
       authenticated: true,
-      body: PartialCommentInput,
+      body: UpdateCommentInput,
       detail: {
         description: 'Update specific fields of an existing comment',
         responses: {

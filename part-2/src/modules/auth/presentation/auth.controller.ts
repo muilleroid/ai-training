@@ -1,6 +1,6 @@
 import { Elysia } from 'elysia';
 
-import { BadRequestErrorDto, UnauthorizedErrorDto } from 'core/presentation/dto';
+import { ConflictErrorDto, UnauthorizedErrorDto } from 'core/presentation/dto';
 
 import { AuthGuard, AuthService } from '../application';
 
@@ -124,7 +124,7 @@ export const AuthController = new Elysia({ name: 'auth', prefix: '/auth' })
       });
 
       if (!response) {
-        return status(400, { message: 'Cannot sign up' });
+        return status(409, { message: 'Conflict' });
       }
 
       return status(200, response);
@@ -143,15 +143,15 @@ export const AuthController = new Elysia({ name: 'auth', prefix: '/auth' })
             },
             description: 'Successfully signed up',
           },
-          '400': {
+          '409': {
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/BadRequestErrorDto',
+                  $ref: '#/components/schemas/ConflictErrorDto',
                 },
               },
             },
-            description: 'Cannot sign up',
+            description: 'Conflict',
           },
         },
         summary: 'Sign up',
@@ -159,7 +159,7 @@ export const AuthController = new Elysia({ name: 'auth', prefix: '/auth' })
       },
       response: {
         200: AccountResponseDto,
-        400: BadRequestErrorDto,
+        409: ConflictErrorDto,
       },
     },
   );

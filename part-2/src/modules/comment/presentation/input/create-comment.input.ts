@@ -1,6 +1,6 @@
 import { t } from 'elysia';
 
-export const CommentInput = t.Object(
+export const CreateCommentInput = t.Object(
   {
     body: t.String({
       description: 'The content of the comment',
@@ -18,6 +18,6 @@ export const CommentInput = t.Object(
   },
   {
     description: 'Input data for creating a new comment',
-    title: 'Comment Input',
+    title: 'Create Comment Input',
   },
 );

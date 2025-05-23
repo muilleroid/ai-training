@@ -1,6 +1,6 @@
 import { Elysia } from 'elysia';
 
-import { BadRequestErrorDto, NotFoundErrorDto } from 'core/presentation/dto';
+import { ConflictErrorDto, NotFoundErrorDto } from 'core/presentation/dto';
 import { AuthGuard } from 'modules/auth/application';
 
 import { UserService } from '../application';
@@ -132,7 +132,7 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
       const user = await userService.create({ user: body });
 
       if (!user) {
-        return status(400, { message: 'User cannot be created' });
+        return status(409, { message: 'Conflict' });
       }
 
       return status(201, user);
@@ -153,16 +153,6 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
             },
             description: 'User created successfully',
           },
-          '400': {
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/BadRequestErrorDto',
-                },
-              },
-            },
-            description: 'Invalid user data or user cannot be created',
-          },
           '401': {
             content: {
               'application/json': {
@@ -172,6 +162,16 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
               },
             },
             description: 'Unauthorized',
+          },
+          '409': {
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/ConflictErrorDto',
+                },
+              },
+            },
+            description: 'Conflict',
           },
         },
         security: [
@@ -184,7 +184,7 @@ export const UserController = new Elysia({ name: 'user/controller', prefix: '/us
       },
       response: {
         201: UserDto,
-        400: BadRequestErrorDto,
+        409: ConflictErrorDto,
       },
     },
   )

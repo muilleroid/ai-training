@@ -1,6 +1,5 @@
 import { Elysia } from 'elysia';
 
-import { ConflictErrorDto, NotFoundErrorDto } from 'core/presentation/dto';
 import { AuthGuard } from 'modules/auth/application';
 
 import { PostService } from '../application';

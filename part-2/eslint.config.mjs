@@ -127,8 +127,8 @@ export default tsEslint.config(
           groups: [['builtin', 'external'], 'internal', 'parent', 'sibling', 'index', 'object'],
           pathGroups: [
             {
-              group: 'internal',
-              pattern: '@bl-spotify-api/**',
+              group: 'builtin',
+              pattern: 'bun:**',
               position: 'before',
             },
           ],

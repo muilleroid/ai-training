@@ -2,12 +2,14 @@ import { beforeEach, describe, expect, it } from 'bun:test';
 import { createId } from '@paralleldrive/cuid2';
 
 import { db } from 'core/infrastructure/database';
+import { commentSchema } from 'modules/comment/infrastructure/schemas';
 import { postSchema } from 'modules/post/infrastructure/schemas';
 import { companySchema, userSchema } from 'modules/user/infrastructure/schemas';
 
 import { request } from '../../helpers';
 
-describe('/posts', () => {
+describe('/comments', () => {
+  const commentId = createId();
   const postId = createId();
   const userId = createId();
 
@@ -30,19 +32,25 @@ describe('/posts', () => {
         username: 'username',
         website: 'https://website.com',
       });
-
       await tx.insert(postSchema).values({
         body: 'body',
         id: postId,
         title: 'title',
         userId,
       });
+
+      await tx.insert(commentSchema).values({
+        body: 'body',
+        id: commentId,
+        postId,
+        userId,
+      });
     });
   });
 
-  describe('/posts (GET)', () => {
+  describe('/ (GET)', () => {
     it('should return 401', async () => {
-      const { status } = await request({ path: '/posts' });
+      const { status } = await request({ path: '/comments' });
 
       expect(status).toBe(401);
     });
@@ -50,7 +58,7 @@ describe('/posts', () => {
     it('should return 200', async () => {
       const { data, status } = await request({
         authenticated: true,
-        path: '/posts',
+        path: '/comments',
       });
 
       expect(status).toBe(200);
@@ -58,12 +66,47 @@ describe('/posts', () => {
       expect(Array.isArray(data)).toEqual(true);
       expect(data.length).toEqual(1);
 
-      const [post] = data;
+      const [comment] = data;
 
-      expect(post).toEqual({
+      expect(comment).toEqual({
         body: 'body',
-        id: postId,
-        title: 'title',
+        id: commentId,
+        postId,
+        userId,
+      });
+    });
+
+    it('should return 200 with postId filter (not existent)', async () => {
+      const { data, status } = await request({
+        authenticated: true,
+        path: '/comments',
+        query: { postId: createId() },
+      });
+
+      expect(status).toBe(200);
+
+      expect(Array.isArray(data)).toEqual(true);
+      expect(data.length).toEqual(0);
+    });
+
+    it('should return 200 with postId filter (existent)', async () => {
+      const { data, status } = await request({
+        authenticated: true,
+        path: '/comments',
+        query: { postId },
+      });
+
+      expect(status).toBe(200);
+
+      expect(Array.isArray(data)).toEqual(true);
+      expect(data.length).toEqual(1);
+
+      const [comment] = data;
+
+      expect(comment).toEqual({
+        body: 'body',
+        id: commentId,
+        postId,
         userId,
       });
     });
@@ -71,7 +114,7 @@ describe('/posts', () => {
     it('should return 200 with userId filter (not existent)', async () => {
       const { data, status } = await request({
         authenticated: true,
-        path: '/posts',
+        path: '/comments',
         query: { userId: createId() },
       });
 
@@ -81,10 +124,10 @@ describe('/posts', () => {
       expect(data.length).toEqual(0);
     });
 
-    it('should return 200 with userId filter (not existent)', async () => {
+    it('should return 200 with userId filter (existent)', async () => {
       const { data, status } = await request({
         authenticated: true,
-        path: '/posts',
+        path: '/comments',
         query: { userId },
       });
 
@@ -93,25 +136,50 @@ describe('/posts', () => {
       expect(Array.isArray(data)).toEqual(true);
       expect(data.length).toEqual(1);
 
-      const [post] = data;
+      const [comment] = data;
 
-      expect(post).toEqual({
+      expect(comment).toEqual({
         body: 'body',
-        id: postId,
-        title: 'title',
+        id: commentId,
+        postId,
+        userId,
+      });
+    });
+
+    it('should return 200 with userId and postId filter', async () => {
+      const { data, status } = await request({
+        authenticated: true,
+        path: '/comments',
+        query: {
+          postId,
+          userId,
+        },
+      });
+
+      expect(status).toBe(200);
+
+      expect(Array.isArray(data)).toEqual(true);
+      expect(data.length).toEqual(1);
+
+      const [comment] = data;
+
+      expect(comment).toEqual({
+        body: 'body',
+        id: commentId,
+        postId,
         userId,
       });
     });
   });
 
-  describe('/posts (POST)', () => {
+  describe('/ (POST)', () => {
     it('should return 401', async () => {
       const { status } = await request({
         method: 'POST',
-        path: '/posts',
+        path: '/comments',
         payload: {
           body: 'body',
-          title: 'title',
+          postId,
           userId,
         },
       });
@@ -123,10 +191,10 @@ describe('/posts', () => {
       const { status } = await request({
         authenticated: true,
         method: 'POST',
-        path: '/posts',
+        path: '/comments',
         payload: {
           body: 'body',
-          title: 'title',
+          postId: createId(),
           userId: createId(),
         },
       });
@@ -138,10 +206,10 @@ describe('/posts', () => {
       const { data, status } = await request({
         authenticated: true,
         method: 'POST',
-        path: '/posts',
+        path: '/comments',
         payload: {
           body: 'body',
-          title: 'title',
+          postId,
           userId,
         },
       });
@@ -151,15 +219,15 @@ describe('/posts', () => {
       expect(data).toEqual({
         body: 'body',
         id: expect.any(String),
-        title: 'title',
+        postId,
         userId,
       });
     });
   });
 
-  describe('/posts/:postId (GET)', () => {
+  describe('/:commentId (GET)', () => {
     it('should return 401', async () => {
-      const { status } = await request({ path: `/posts/${postId}` });
+      const { status } = await request({ path: `/comments/${commentId}` });
 
       expect(status).toBe(401);
     });
@@ -167,7 +235,7 @@ describe('/posts', () => {
     it('should return 404', async () => {
       const { status } = await request({
         authenticated: true,
-        path: `/posts/${createId()}`,
+        path: `/comments/${createId()}`,
       });
 
       expect(status).toBe(404);
@@ -176,75 +244,25 @@ describe('/posts', () => {
     it('should return 200', async () => {
       const { data, status } = await request({
         authenticated: true,
-        path: `/posts/${postId}`,
+        path: `/comments/${commentId}`,
       });
 
       expect(status).toBe(200);
 
       expect(data).toEqual({
         body: 'body',
-        id: postId,
-        title: 'title',
+        id: commentId,
+        postId,
         userId,
       });
     });
   });
 
-  describe('/posts/:postId (PUT)', () => {
+  describe('/:commentId (PUT)', () => {
     it('should return 401', async () => {
       const { status } = await request({
         method: 'PUT',
-        path: `/posts/${postId}`,
-        payload: {
-          body: 'updated',
-          title: 'title',
-        },
-      });
-
-      expect(status).toBe(401);
-    });
-
-    it('should return 404', async () => {
-      const { status } = await request({
-        authenticated: true,
-        method: 'PUT',
-        path: `/posts/${createId()}`,
-        payload: {
-          body: 'updated',
-          title: 'title',
-        },
-      });
-
-      expect(status).toBe(404);
-    });
-
-    it('should return 200', async () => {
-      const { data, status } = await request({
-        authenticated: true,
-        method: 'PUT',
-        path: `/posts/${postId}`,
-        payload: {
-          body: 'updated',
-          title: 'title',
-        },
-      });
-
-      expect(status).toBe(200);
-
-      expect(data).toEqual({
-        body: 'updated',
-        id: postId,
-        title: 'title',
-        userId,
-      });
-    });
-  });
-
-  describe('/posts/:postId (PATCH)', () => {
-    it('should return 401', async () => {
-      const { status } = await request({
-        method: 'PATCH',
-        path: `/posts/${postId}`,
+        path: `/comments/${commentId}`,
         payload: { body: 'updated' },
       });
 
@@ -254,8 +272,8 @@ describe('/posts', () => {
     it('should return 404', async () => {
       const { status } = await request({
         authenticated: true,
-        method: 'PATCH',
-        path: `/posts/${createId()}`,
+        method: 'PUT',
+        path: `/comments/${createId()}`,
         payload: { body: 'updated' },
       });
 
@@ -265,8 +283,8 @@ describe('/posts', () => {
     it('should return 200', async () => {
       const { data, status } = await request({
         authenticated: true,
-        method: 'PATCH',
-        path: `/posts/${postId}`,
+        method: 'PUT',
+        path: `/comments/${commentId}`,
         payload: { body: 'updated' },
       });
 
@@ -274,18 +292,59 @@ describe('/posts', () => {
 
       expect(data).toEqual({
         body: 'updated',
-        id: postId,
-        title: 'title',
+        id: commentId,
+        postId,
         userId,
       });
     });
   });
 
-  describe('/posts/:postId (DELETE)', () => {
+  describe('/:commentId (PATCH)', () => {
+    it('should return 401', async () => {
+      const { status } = await request({
+        method: 'PATCH',
+        path: `/comments/${commentId}`,
+        payload: { body: 'updated' },
+      });
+
+      expect(status).toBe(401);
+    });
+
+    it('should return 404', async () => {
+      const { status } = await request({
+        authenticated: true,
+        method: 'PATCH',
+        path: `/comments/${createId()}`,
+        payload: { body: 'updated' },
+      });
+
+      expect(status).toBe(404);
+    });
+
+    it('should return 200', async () => {
+      const { data, status } = await request({
+        authenticated: true,
+        method: 'PATCH',
+        path: `/comments/${commentId}`,
+        payload: { body: 'updated' },
+      });
+
+      expect(status).toBe(200);
+
+      expect(data).toEqual({
+        body: 'updated',
+        id: commentId,
+        postId,
+        userId,
+      });
+    });
+  });
+
+  describe('/:commentId (DELETE)', () => {
     it('should return 401', async () => {
       const { status } = await request({
         method: 'DELETE',
-        path: `/posts/${postId}`,
+        path: `/comments/${commentId}`,
       });
 
       expect(status).toBe(401);
@@ -295,7 +354,7 @@ describe('/posts', () => {
       const { status } = await request({
         authenticated: true,
         method: 'DELETE',
-        path: `/posts/${createId()}`,
+        path: `/comments/${createId()}`,
       });
 
       expect(status).toBe(404);
@@ -305,15 +364,15 @@ describe('/posts', () => {
       const { data, status } = await request({
         authenticated: true,
         method: 'DELETE',
-        path: `/posts/${postId}`,
+        path: `/comments/${commentId}`,
       });
 
       expect(status).toBe(200);
 
       expect(data).toEqual({
         body: 'body',
-        id: postId,
-        title: 'title',
+        id: commentId,
+        postId,
         userId,
       });
     });

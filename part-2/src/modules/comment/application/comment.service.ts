@@ -1,5 +1,7 @@
 import { Elysia } from 'elysia';
 
+import { NotFoundError } from 'core/errors';
+
 import { CommentDomain } from '../domain';
 
 import type { CreateParams, DeleteParams, FindByIdParams, FindParams, UpdateParams } from './comment-service.types';
@@ -8,11 +10,21 @@ export const CommentService = new Elysia({ name: 'comment/service' })
   .use(CommentDomain)
   .derive({ as: 'global' }, function deriveCommentService({ commentDomain }) {
     const commentService = {
-      create: ({ comment }: CreateParams) => {
-        return commentDomain.create({ comment });
+      create: async ({ comment }: CreateParams) => {
+        const createdComment = await commentDomain.create({ comment });
+
+        return createdComment!;
       },
-      delete: ({ commentId }: DeleteParams) => {
-        return commentDomain.delete({ commentId });
+      delete: async ({ commentId }: DeleteParams) => {
+        const exists = await commentDomain.exists({ commentId });
+
+        if (!exists) {
+          throw new NotFoundError('Comment not found');
+        }
+
+        const deletedComment = await commentDomain.delete({ commentId });
+
+        return deletedComment!;
       },
       find: ({ postId, userId }: FindParams = {}) => {
         return commentDomain.find({
@@ -20,14 +32,30 @@ export const CommentService = new Elysia({ name: 'comment/service' })
           userId,
         });
       },
-      findById: ({ commentId }: FindByIdParams) => {
-        return commentDomain.findById({ commentId });
+      findById: async ({ commentId }: FindByIdParams) => {
+        const exists = await commentDomain.exists({ commentId });
+
+        if (!exists) {
+          throw new NotFoundError('Comment not found');
+        }
+
+        const foundComment = await commentDomain.findById({ commentId });
+
+        return foundComment!;
       },
-      update: ({ comment, commentId }: UpdateParams) => {
-        return commentDomain.update({
+      update: async ({ comment, commentId }: UpdateParams) => {
+        const exists = await commentDomain.exists({ commentId });
+
+        if (!exists) {
+          throw new NotFoundError('Comment not found');
+        }
+
+        const updatedComment = await commentDomain.update({
           comment,
           commentId,
         });
+
+        return updatedComment!;
       },
     };
 

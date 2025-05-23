@@ -1,6 +1,5 @@
 import { Elysia } from 'elysia';
 
-import { ConflictErrorDto, NotFoundErrorDto } from 'core/presentation/dto';
 import { AuthGuard } from 'modules/auth/application';
 
 import { CommentService } from '../application';
@@ -68,14 +67,8 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
   )
   .get(
     '/:commentId',
-    async ({ commentService, params: { commentId }, status }) => {
-      const comment = await commentService.findById({ commentId });
-
-      if (!comment) {
-        return status(404, { message: 'Comment not found' });
-      }
-
-      return comment;
+    ({ commentService, params: { commentId } }) => {
+      return commentService.findById({ commentId });
     },
     {
       authenticated: true,
@@ -122,20 +115,13 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
         tags: ['Comments'],
       },
       params: CommentIdUrlParams,
-      response: {
-        200: CommentDto,
-        404: NotFoundErrorDto,
-      },
+      response: CommentDto,
     },
   )
   .post(
     '/',
     async ({ body, commentService, status }) => {
       const comment = await commentService.create({ comment: body });
-
-      if (!comment) {
-        return status(409, { message: 'Conflict' });
-      }
 
       return status(201, comment);
     },
@@ -186,23 +172,16 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
       },
       response: {
         201: CommentDto,
-        409: ConflictErrorDto,
       },
     },
   )
   .put(
     '/:commentId',
-    async ({ body, commentService, params: { commentId }, status }) => {
-      const comment = await commentService.update({
+    ({ body, commentService, params: { commentId } }) => {
+      return commentService.update({
         comment: body,
         commentId,
       });
-
-      if (!comment) {
-        return status(404, { message: 'Comment not found' });
-      }
-
-      return comment;
     },
     {
       authenticated: true,
@@ -250,25 +229,16 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
         tags: ['Comments'],
       },
       params: CommentIdUrlParams,
-      response: {
-        200: CommentDto,
-        404: NotFoundErrorDto,
-      },
+      response: CommentDto,
     },
   )
   .patch(
     '/:commentId',
-    async ({ body, commentService, params: { commentId }, status }) => {
-      const comment = await commentService.update({
+    ({ body, commentService, params: { commentId } }) => {
+      return commentService.update({
         comment: body,
         commentId,
       });
-
-      if (!comment) {
-        return status(404, { message: 'Comment not found' });
-      }
-
-      return comment;
     },
     {
       authenticated: true,
@@ -316,22 +286,13 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
         tags: ['Comments'],
       },
       params: CommentIdUrlParams,
-      response: {
-        200: CommentDto,
-        404: NotFoundErrorDto,
-      },
+      response: CommentDto,
     },
   )
   .delete(
     '/:commentId',
-    async ({ commentService, params: { commentId }, status }) => {
-      const comment = await commentService.delete({ commentId });
-
-      if (!comment) {
-        return status(404, { message: 'Comment not found' });
-      }
-
-      return comment;
+    ({ commentService, params: { commentId } }) => {
+      return commentService.delete({ commentId });
     },
     {
       authenticated: true,
@@ -378,9 +339,6 @@ export const CommentController = new Elysia({ name: 'comment/controller', prefix
         tags: ['Comments'],
       },
       params: CommentIdUrlParams,
-      response: {
-        200: CommentDto,
-        404: NotFoundErrorDto,
-      },
+      response: CommentDto,
     },
   );

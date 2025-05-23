@@ -1,4 +1,4 @@
-import { and, eq } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import { Elysia } from 'elysia';
 import omitEmpty from 'omit-empty-es';
 
@@ -32,6 +32,21 @@ export const CommentRepository = new Elysia({ name: 'comment/repository' })
         await db.delete(commentSchema).where(eq(commentSchema.id, commentId));
 
         return comment;
+      },
+      exists: async ({ commentId }) => {
+        const { rows } = await db.execute<{ exists: boolean }>(sql`
+          SELECT EXISTS (
+            SELECT
+              1
+            FROM
+              ${commentSchema}
+            WHERE
+              ${commentSchema.id} = ${commentId}
+          ) as exists;`);
+
+        const [{ exists }] = rows;
+
+        return exists;
       },
       find: async ({ postId, userId } = {}) => {
         const filters = [

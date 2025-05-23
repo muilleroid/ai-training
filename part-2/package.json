@@ -5,6 +5,7 @@
     "dev": "bun run --watch src/index.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
+    "db:seed": "bun run drizzle/scripts/seed.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"./src/**/*.ts\" \"./tests/**/*.ts\"",
@@ -29,6 +30,7 @@
   "devDependencies": {
     "@eslint/compat": "1.2.9",
     "@eslint/js": "9.27.0",
+    "@faker-js/faker": "9.8.0",
     "@types/bun": "1.2.13",
     "bun-types": "1.2.13",
     "drizzle-kit": "0.31.1",

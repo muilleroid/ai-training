@@ -30,15 +30,13 @@ afterAll(() => {
 
 afterEach(async () => {
   await db.execute(sql`
-    BEGIN TRANSACTION ;
-
-    TRUNCATE TABLE ${accountSchema} CASCADE;
-    TRUNCATE TABLE ${addressSchema} CASCADE;
-    TRUNCATE TABLE ${commentSchema} CASCADE;
-    TRUNCATE TABLE ${companySchema} CASCADE;
-    TRUNCATE TABLE ${postSchema} CASCADE;
-    TRUNCATE TABLE ${userSchema} CASCADE;
-
-    COMMIT TRANSACTION;
+    TRUNCATE TABLE
+      ${accountSchema},
+      ${addressSchema},
+      ${commentSchema},
+      ${companySchema},
+      ${postSchema},
+      ${userSchema}
+      CASCADE;
   `);
 });

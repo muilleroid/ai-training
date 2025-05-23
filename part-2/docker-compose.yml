@@ -26,10 +26,13 @@ services:
     working_dir: /usr/src/migrations
     environment:
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
+      - SEED=true
     volumes:
       - ./docker/migrations/entrypoint.sh:/usr/src/migrations/entrypoint.sh
       - ./drizzle:/usr/src/migrations/drizzle
       - ./drizzle.config.ts:/usr/src/migrations/drizzle.config.ts
+      - ./src:/usr/src/migrations/src
+      - ./tsconfig.json:/usr/src/migrations/tsconfig.json
     depends_on:
       postgres:
         condition: service_healthy

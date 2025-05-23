@@ -10,5 +10,5 @@
     "target": "ES2021",
     "typeRoots": ["@types-extensions", "node_modules/@types", "node_module/bun-types"]
   },
-  "exclude": ["drizzle", "node_modules"]
+  "exclude": ["node_modules"]
 }

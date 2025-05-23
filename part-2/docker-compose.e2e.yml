@@ -14,7 +14,7 @@ services:
       timeout: 1s
       retries: 5
 
-  migrations:
+  migrations-e2e:
     image: oven/bun:1.2.13-alpine
     entrypoint: ['/bin/ash', '/usr/src/migrations/entrypoint.sh']
     working_dir: /usr/src/migrations

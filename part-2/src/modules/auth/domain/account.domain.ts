@@ -2,22 +2,32 @@ import { Elysia } from 'elysia';
 
 import { AccountRepository } from '../infrastructure/repositories';
 
-import type { CreateParams, FindByEmailParams, FindByIdParams } from './account-domain.types';
+import type { TAccountDomain, TAccountRepository } from './types';
+
+type AccountDomainFactoryParams = {
+  accountRepository: TAccountRepository;
+};
+
+export const accountDomainFactory = ({ accountRepository }: AccountDomainFactoryParams): TAccountDomain => {
+  const accountDomain: TAccountDomain = {
+    create: ({ account }) => {
+      return accountRepository.create({ account });
+    },
+    findByEmail: ({ email }) => {
+      return accountRepository.findByEmail({ email });
+    },
+    findById: ({ accountId }) => {
+      return accountRepository.findById({ accountId });
+    },
+  };
+
+  return accountDomain;
+};
 
 export const AccountDomain = new Elysia({ name: 'account/domain' })
   .use(AccountRepository)
   .derive({ as: 'global' }, function deriveAccountDomain({ accountRepository }) {
-    const accountDomain = {
-      create: ({ account }: CreateParams) => {
-        return accountRepository.create({ account });
-      },
-      findByEmail: ({ email }: FindByEmailParams) => {
-        return accountRepository.findByEmail({ email });
-      },
-      findById: ({ accountId }: FindByIdParams) => {
-        return accountRepository.findById({ accountId });
-      },
-    };
+    const accountDomain = accountDomainFactory({ accountRepository });
 
     return { accountDomain };
   });

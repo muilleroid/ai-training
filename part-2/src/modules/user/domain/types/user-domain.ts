@@ -23,7 +23,7 @@ type UpdateParams = {
   userId: string;
 };
 
-export type TUserRepository = {
+export type TUserDomain = {
   create: (params: CreateParams) => Promise<User | null>;
   delete: (params: DeleteParams) => Promise<User | null>;
   exists: (params: ExistsParams) => Promise<boolean>;

@@ -2,41 +2,44 @@ import { Elysia } from 'elysia';
 
 import { PostRepository } from '../infrastructure/repositories';
 
-import type {
-  CreateParams,
-  DeleteParams,
-  ExistsParams,
-  FindByIdParams,
-  FindParams,
-  UpdateParams,
-} from './post-domain.types';
+import type { TPostDomain, TPostRepository } from './types';
+
+type PostDomainFactoryParams = {
+  postRepository: TPostRepository;
+};
+
+export const postDomainFactory = ({ postRepository }: PostDomainFactoryParams) => {
+  const postDomain: TPostDomain = {
+    create: ({ post }) => {
+      return postRepository.create({ post });
+    },
+    delete: ({ postId }) => {
+      return postRepository.delete({ postId });
+    },
+    exists: ({ postId }) => {
+      return postRepository.exists({ postId });
+    },
+    find: (params = {}) => {
+      return postRepository.find(params);
+    },
+    findById: ({ postId }) => {
+      return postRepository.findById({ postId });
+    },
+    update: ({ post, postId }) => {
+      return postRepository.update({
+        post,
+        postId,
+      });
+    },
+  };
+
+  return postDomain;
+};
 
 export const PostDomain = new Elysia({ name: 'post/domain' })
   .use(PostRepository)
   .derive({ as: 'global' }, function derivePostDomain({ postRepository }) {
-    const postDomain = {
-      create: ({ post }: CreateParams) => {
-        return postRepository.create({ post });
-      },
-      delete: ({ postId }: DeleteParams) => {
-        return postRepository.delete({ postId });
-      },
-      exists: ({ postId }: ExistsParams) => {
-        return postRepository.exists({ postId });
-      },
-      find: ({ userId }: FindParams = {}) => {
-        return postRepository.find({ userId });
-      },
-      findById: ({ postId }: FindByIdParams) => {
-        return postRepository.findById({ postId });
-      },
-      update: ({ post, postId }: UpdateParams) => {
-        return postRepository.update({
-          post,
-          postId,
-        });
-      },
-    };
+    const postDomain = postDomainFactory({ postRepository });
 
     return { postDomain };
   });

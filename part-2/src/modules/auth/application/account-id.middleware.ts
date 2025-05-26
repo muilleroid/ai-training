@@ -13,5 +13,5 @@ export const AccountIdMiddleware = new Elysia({ name: 'accountId' })
       return { accountId: '' };
     }
 
-    return { accountId: payload.id as string };
+    return { accountId: payload.id };
   });

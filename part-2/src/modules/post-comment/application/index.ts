@@ -1,1 +1,1 @@
-export * from './post-comment-service.types';
+export * from './post-comment.service';

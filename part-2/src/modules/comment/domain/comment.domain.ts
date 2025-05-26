@@ -2,44 +2,47 @@ import { Elysia } from 'elysia';
 
 import { CommentRepository } from '../infrastructure/repositories';
 
-import type {
-  CreateParams,
-  DeleteParams,
-  ExistsParams,
-  FindByIdParams,
-  FindParams,
-  UpdateParams,
-} from './comment-domain.types';
+import type { TCommentDomain, TCommentRepository } from './types';
+
+type CommentDomainFactoryParams = {
+  commentRepository: TCommentRepository;
+};
+
+export const commentDomainFactory = ({ commentRepository }: CommentDomainFactoryParams) => {
+  const commentDomain: TCommentDomain = {
+    create: ({ comment }) => {
+      return commentRepository.create({ comment });
+    },
+    delete: ({ commentId }) => {
+      return commentRepository.delete({ commentId });
+    },
+    exists: ({ commentId }) => {
+      return commentRepository.exists({ commentId });
+    },
+    find: ({ postId, userId } = {}) => {
+      return commentRepository.find({
+        postId,
+        userId,
+      });
+    },
+    findById: ({ commentId }) => {
+      return commentRepository.findById({ commentId });
+    },
+    update: ({ comment, commentId }) => {
+      return commentRepository.update({
+        comment,
+        commentId,
+      });
+    },
+  };
+
+  return commentDomain;
+};
 
 export const CommentDomain = new Elysia({ name: 'comment/domain' })
   .use(CommentRepository)
   .derive({ as: 'global' }, function deriveCommentDomain({ commentRepository }) {
-    const commentDomain = {
-      create: ({ comment }: CreateParams) => {
-        return commentRepository.create({ comment });
-      },
-      delete: ({ commentId }: DeleteParams) => {
-        return commentRepository.delete({ commentId });
-      },
-      exists: ({ commentId }: ExistsParams) => {
-        return commentRepository.exists({ commentId });
-      },
-      find: ({ postId, userId }: FindParams = {}) => {
-        return commentRepository.find({
-          postId,
-          userId,
-        });
-      },
-      findById: ({ commentId }: FindByIdParams) => {
-        return commentRepository.findById({ commentId });
-      },
-      update: ({ comment, commentId }: UpdateParams) => {
-        return commentRepository.update({
-          comment,
-          commentId,
-        });
-      },
-    };
+    const commentDomain = commentDomainFactory({ commentRepository });
 
     return { commentDomain };
   });
